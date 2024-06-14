@@ -237,7 +237,7 @@ DROP TABLE IF EXISTS customer CASCADE;
 CREATE TABLE customer (
 	lieferadresse VARCHAR(100),
 	iban VARCHAR (34),
-	username VARCHAR(20),
+	username VARCHAR(40) UNIQUE,
 	customer_id SERIAL PRIMARY KEY
 );
 

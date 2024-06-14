@@ -663,7 +663,8 @@ DROP TABLE IF EXISTS xmldataleipzig;
 
 -------------Reviews-------------------------------------------------------------------------------------
 -- Create a temporary table for importing the CSV data
-CREATE TEMP TABLE temp_product_reviews (
+DROP TABLE IF EXISTS temp_product_reviews CASCADE;
+CREATE TABLE temp_product_reviews (
     review_id SERIAL PRIMARY KEY,
     product TEXT, 
     rating TEXT,
@@ -671,7 +672,8 @@ CREATE TEMP TABLE temp_product_reviews (
     reviewdate TEXT,
     username TEXT,
     summary TEXT,
-    review_content TEXT
+    review_content TEXT,
+	customer_id INTEGER
 );
 
 -- Copy data from the CSV file into the temporary table
@@ -679,6 +681,22 @@ COPY temp_product_reviews (product, rating, helpful, reviewdate, username, summa
 FROM 'C:\\temp\\reviews.csv'
 DELIMITER ','
 CSV HEADER;
+
+
+
+
+-- ALle Customer aus der reviews datei in die customer einfügen
+INSERT INTO customer (username)
+SELECT DISTINCT username
+FROM temp_product_reviews
+ON CONFLICT (username) DO NOTHING;
+-- IDs aus customer rausziehen für genau die reviews mit den usernames (also username durch customer_id ersetzen quasi)
+UPDATE temp_product_reviews
+SET customer_id = customer.customer_id
+FROM customer
+WHERE temp_product_reviews.username = customer.username;
+
+SELECT * FROM temp_product_reviews;
 
 -- Handle data transformation and insertion into the main table
 DO $$
@@ -692,14 +710,14 @@ BEGIN
             CASE WHEN rating ~ '^[0-9]+$' THEN CAST(rating AS INTEGER) ELSE NULL END AS rating,
             CASE WHEN helpful ~ '^[0-9]+$' THEN CAST(helpful AS INTEGER) ELSE NULL END AS helpful,
             CASE WHEN reviewdate ~ '^\d{4}-\d{2}-\d{2}$' THEN CAST(reviewdate AS DATE) ELSE NULL END AS reviewdate,
-            username,
+            customer_id,  -- PROBLEM BEI GAST user, DA MAN DA NICHT UNTERSCHEIDEN KANN VON WELCHEM GAST DIE REVIEW IST
             summary,
             review_content
-        FROM temp_product_reviews
+        FROM temp_product_reviews 
     LOOP
         BEGIN
-            INSERT INTO product_reviews (asin, rating, helpful, reviewdate, username, summary, review_content)
-            VALUES (rec.product, rec.rating, rec.helpful, rec.reviewdate, rec.username, rec.summary, rec.review_content);
+            INSERT INTO product_reviews (asin, rating, helpful, reviewdate, customer_id, summary, review_content)
+            VALUES (rec.product, rec.rating, rec.helpful, rec.reviewdate, rec.customer_id, rec.summary, rec.review_content);
         EXCEPTION
             WHEN others THEN
                 INSERT INTO error_input (entity_name, attribute_name, error_message, item_id, xmldata)
@@ -712,7 +730,9 @@ END $$;
 DROP TABLE temp_product_reviews;
 
 
---SELECT * FROM product_reviews
+
+
+--SELECT * FROM product_reviews;
 --SELECT * FROM error_input WHERE entity_name = 'Review'
 
 --------------------------------categories----------------------------------------------------------------
