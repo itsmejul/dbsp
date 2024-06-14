@@ -216,7 +216,7 @@ CREATE TABLE musicspec(
 DROP TABLE IF EXISTS categories CASCADE;
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
+    title TEXT NOT NULL,
     parent_id INTEGER REFERENCES categories(id) ON DELETE CASCADE
 );
 --SELECT * FROM categories

@@ -757,7 +757,7 @@ BEGIN
     SELECT unnest(xpath('/category/text()', cat::xml))::TEXT INTO cat_name;
     
     -- Insert the category
-    INSERT INTO categories (name, parent_id)
+    INSERT INTO categories (title, parent_id)
     VALUES (cat_name, parent_id)
     RETURNING id INTO cat_id;
 
@@ -774,7 +774,7 @@ BEGIN
         END;
     END LOOP;
 
-    -- Process subcategories recursively
+    -- Subkategorien Rekursion
     FOR subcat IN (SELECT unnest(xpath('category/category', cat)))
     LOOP
         PERFORM insert_category(subcat, cat_id);

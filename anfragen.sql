@@ -64,4 +64,83 @@ UNION	(SELECT creator_name AS person_name FROM creator d, item i WHERE d.creator
 UNION (SELECT actor_name AS person_name FROM actor d, item i WHERE d.actor_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book')  -- Alle die auch ACTOR sind
 UNION (SELECT artist_name AS person_name FROM artist d, item i WHERE d.artist_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book')); -- Alle die auch ARTIST sind
 
---ANRAGE 9
+--ANFRAGE 9
+SELECT AVG(number_of_tracks) FROM (
+SELECT asin, COUNT(track_title) AS number_of_tracks FROM tracks GROUP BY asin);
+
+
+-- ANFRAGE 10
+-- Hauptcategorien für jedes item bestimmen
+-- erst alle kategorien auf ihre hauptkategorie mappen
+WITH RECURSIVE category_hierarchy AS (
+    -- Standardfall: alle hauptkategorien
+    SELECT 
+        id AS category_id,
+        title AS top_category_title,
+        id AS top_category_id
+    FROM 
+        categories
+    WHERE 
+        parent_id IS NULL
+    
+    UNION ALL
+    -- Rekursiver fall: subkategorien hinzufügen
+    
+    SELECT 
+        c.id AS category_id,
+        ch.top_category_title,
+        ch.top_category_id
+    FROM 
+        categories c
+     JOIN -- inner
+        category_hierarchy ch ON c.parent_id = ch.category_id
+),
+-- dann alle items auf ihre hauptkategorie mappen
+items_with_top_categories AS (
+	
+    -- JOINE item_categories mit category_hierarchy also den dem mapping von kategorien auf ihre hauptkategorie
+    SELECT 
+        ic.asin,
+        ch.top_category_id,
+        ch.top_category_title
+    FROM 
+        item_categories ic
+    JOIN --inner
+        category_hierarchy ch ON ic.category_id = ch.category_id
+) ,
+-- alle similar produkts mit den hauptkategorien ihrer beiden items
+similar_products_with_categories AS (
+    
+    SELECT 
+        sp.asin_original,
+        sp.asin_similar,
+        iwc1.top_category_id AS original_top_category_id,
+        iwc1.top_category_title AS original_top_category_title,
+        iwc2.top_category_id AS similar_top_category_id,
+        iwc2.top_category_title AS similar_top_category_title
+    FROM 
+        sim_products sp
+    JOIN --inner 
+        items_with_top_categories iwc1 ON sp.asin_original = iwc1.asin
+    JOIN --inner 
+        items_with_top_categories iwc2 ON sp.asin_similar = iwc2.asin
+),
+-- Liste von allen similar produkts die in verschiedenen hauptkategorien sind
+items_with_similar_in_different_top_category AS (
+
+SELECT DISTINCT
+    asin_original,
+    asin_similar,
+    original_top_category_id,
+    original_top_category_title,
+    similar_top_category_id,
+    similar_top_category_title
+FROM 
+    similar_products_with_categories
+WHERE 
+    original_top_category_id <> similar_top_category_id
+ORDER BY 
+    asin_original, asin_similar
+)
+-- erforderte Ausgabe: Asins von allen Items, die ähnliche Items in anderer Hauptkategorie haben
+SELECT DISTINCT asin_original FROM items_with_similar_in_different_top_category;
