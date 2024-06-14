@@ -17,6 +17,7 @@ SELECT unnest(xpath('//item', XMLPARSE(DOCUMENT convert_from(pg_read_binary_file
 	
 -----------------------------------SHOPS-----------------------------------------------
 -- Create a temporary table for XML data
+DROP TABLE IF EXISTS temp_shops CASCADE;
 CREATE TEMP TABLE temp_shops (
     xmldata XML
 );
@@ -326,13 +327,13 @@ BEGIN
     FOR rec IN 
         SELECT 
 			asin, 
-			unnest(xpath('//sim_product/asin/text()', xmldata::xml))::text AS asin_similar, 
-			unnest(xpath('//sim_product/title/text()', xmldata::xml))::text AS title
+			unnest(xpath('//sim_product/asin/text()', xmldata::xml))::text AS asin_similar
+		--	unnest(xpath('//sim_product/title/text()', xmldata::xml))::text AS title
 			FROM temp_item WHERE temp_item.shop_id = 1
     LOOP
         BEGIN
-            INSERT INTO sim_products (asin_original, asin_similar, title)
-            VALUES (rec.asin, rec.asin_similar, rec.title);
+            INSERT INTO sim_products (asin_original, asin_similar)
+            VALUES (rec.asin, rec.asin_similar);
         EXCEPTION
             WHEN others THEN
                 INSERT INTO error_input (entity_name, attribute_name, error_message, item_id, xmldata)
@@ -348,13 +349,13 @@ BEGIN
     FOR rec IN 
         SELECT 
 			asin, 
-			unnest(xpath('/similars/item/@asin', xmldata::xml))::text AS asin_similar, 
-			unnest(xpath('/similars/item/text()', xmldata::xml))::text AS title
+			unnest(xpath('/similars/item/@asin', xmldata::xml))::text AS asin_similar
+		 --	unnest(xpath('/similars/item/text()', xmldata::xml))::text AS title
 			FROM temp_item WHERE temp_item.shop_id = 2
     LOOP
         BEGIN
-            INSERT INTO sim_products (asin_original, asin_similar, title)
-            VALUES (rec.asin, rec.asin_similar, rec.title);
+            INSERT INTO sim_products (asin_original, asin_similar)
+            VALUES (rec.asin, rec.asin_similar);
         EXCEPTION
             WHEN others THEN
                 INSERT INTO error_input (entity_name, attribute_name, error_message, item_id, xmldata)

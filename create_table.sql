@@ -59,12 +59,13 @@ CREATE TABLE lists(
 --gleiche Items
 DROP TABLE IF EXISTS sim_products CASCADE;
 CREATE TABLE sim_products(
-	sim_product_id SERIAL PRIMARY KEY,
-	title VARCHAR(255),
+	--sim_product_id SERIAL PRIMARY KEY,     neuer PK aus den zwei asins
+	--title VARCHAR(255),                    unnötiges attribut
 	asin_original VARCHAR(10) NOT NULL,
 	asin_similar VARCHAR(10) NOT NULL,
-	FOREIGN KEY (asin_original) REFERENCES item(asin) ON DELETE CASCADE,
-	FOREIGN KEY (asin_similar) REFERENCES item(asin) ON DELETE CASCADE
+	PRIMARY KEY(asin_original, asin_similar),
+	FOREIGN KEY (asin_original) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (asin_similar) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM sim_products
 --Authoren
@@ -211,21 +212,6 @@ CREATE TABLE musicspec(
 	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
 );
 --SELECT * FROM musicspec
---product_reviews
-DROP TABLE IF EXISTS product_reviews CASCADE;
-CREATE TABLE IF NOT EXISTS product_reviews (
-    review_id SERIAL PRIMARY KEY,
-    asin VARCHAR(10) NOT NULL,
-    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
-    helpful INTEGER DEFAULT 0,
-    reviewdate DATE NOT NULL,
-    user_id INTEGER,
-	FOREIGN KEY user_id REFERENCES user(user_id), -- ON DELETE /UPDATE durch deleted user ersetzen!!!!
-    summary TEXT,
-    review_content TEXT,
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
-);
---SELECT * FROM product_reviews
 --Kategorien
 DROP TABLE IF EXISTS categories CASCADE;
 CREATE TABLE categories (
@@ -252,19 +238,37 @@ CREATE TABLE customer (
 	lieferadresse VARCHAR(100),
 	iban VARCHAR (34),
 	username VARCHAR(20),
-	user_id SERIAL PRIMARY KEY
-)
+	customer_id SERIAL PRIMARY KEY
+);
 
+DROP TABLE IF EXISTS customer_buy_item CASCADE;
 CREATE TABLE customer_buy_item (
-	user_id INTEGER,
-	FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-	item_id INTEGER,
-	FOREIGN KEY (item_id) REFERENCES item(item_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	customer_id INTEGER,
+	FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	asin VARCHAR(10),
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE,
 	price_id INTEGER,
 	FOREIGN KEY (price_id) REFERENCES price(price_id) ON DELETE CASCADE ON UPDATE CASCADE,
 	time_of_buy VARCHAR(30)  --Datums oder zeit datentyp?
 	
-)
+);
 
+
+
+--product_reviews
+DROP TABLE IF EXISTS product_reviews CASCADE;
+CREATE TABLE IF NOT EXISTS product_reviews (
+    review_id SERIAL PRIMARY KEY,
+    asin VARCHAR(10) NOT NULL,
+    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    helpful INTEGER DEFAULT 0,
+    reviewdate DATE NOT NULL,
+    customer_id INTEGER,
+	FOREIGN KEY (customer_id) REFERENCES customer(customer_id), -- ON DELETE /UPDATE durch deleted user ersetzen!!!!
+    summary TEXT,
+    review_content TEXT,
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+);
+--SELECT * FROM product_reviews
 
 
