@@ -219,7 +219,8 @@ CREATE TABLE IF NOT EXISTS product_reviews (
     rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
     helpful INTEGER DEFAULT 0,
     reviewdate DATE NOT NULL,
-    username VARCHAR(255) NOT NULL,
+    user_id INTEGER,
+	FOREIGN KEY user_id REFERENCES user(user_id), -- ON DELETE /UPDATE durch deleted user ersetzen!!!!
     summary TEXT,
     review_content TEXT,
 	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
@@ -246,9 +247,24 @@ CREATE TABLE item_categories (
 
 
 
+DROP TABLE IF EXISTS customer CASCADE;
+CREATE TABLE customer (
+	lieferadresse VARCHAR(100),
+	iban VARCHAR (34),
+	username VARCHAR(20),
+	user_id SERIAL PRIMARY KEY
+)
 
-
-
+CREATE TABLE customer_buy_item (
+	user_id INTEGER,
+	FOREIGN KEY (user_id) REFERENCES user(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	item_id INTEGER,
+	FOREIGN KEY (item_id) REFERENCES item(item_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	price_id INTEGER,
+	FOREIGN KEY (price_id) REFERENCES price(price_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	time_of_buy VARCHAR(30)  --Datums oder zeit datentyp?
+	
+)
 
 
 
