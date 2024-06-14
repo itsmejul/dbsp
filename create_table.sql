@@ -42,6 +42,7 @@ CREATE TABLE price(
     price_currency VARCHAR(3),
     price_value INTEGER,
     price_shop_id INTEGER,
+	avg_review_score float,
     FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE,
 	FOREIGN KEY (price_shop_id) REFERENCES shops(shop_id) ON DELETE CASCADE
 );
