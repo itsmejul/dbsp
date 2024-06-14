@@ -63,3 +63,5 @@ SELECT DISTINCT a.author_name FROM author a WHERE EXISTS (
 UNION	(SELECT creator_name AS person_name FROM creator d, item i WHERE d.creator_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book') --Alle die auch Creator sind
 UNION (SELECT actor_name AS person_name FROM actor d, item i WHERE d.actor_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book')  -- Alle die auch ACTOR sind
 UNION (SELECT artist_name AS person_name FROM artist d, item i WHERE d.artist_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book')); -- Alle die auch ARTIST sind
+
+--ANRAGE 9
