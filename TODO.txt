@@ -18,6 +18,7 @@ fehler überbegriffe zB syntaxfehler (die 5 arten aus aufgabe) sodass man nach d
 NEGATIVER PREIS RAUSLÖSCHEN
 
 
+autor auf bookspec FK statt item mappen, artist auf music spec statt item etc
 
 
 ## Anfragen
@@ -56,3 +57,8 @@ ANZAHLEN STIMMEN NICHT ÜBEREIN
 11. Welche Produkte werden in allen Filialen angeboten? Hinweis: Ihre Query muss so formuliert werden, dass sie für eine beliebige Anzahl von Filialen funktioniert. Hinweis: Beachten Sie, dass ein Produkt mehrfach von einer Filiale angeboten werden kann (z.B. neu und gebraucht).
 
 12. In wieviel Prozent der Fälle der Frage 11 gibt es in Leipzig das preiswerteste Angebot?
+
+
+ALLE ANFRAGEN MIT AUSGABEN IN TXT DATEI GUT FORMATIERT EXPORTIERN
+
+------------TEIL 2B ÄNDERUNGEN-------!!!!!!!!!!

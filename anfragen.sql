@@ -144,3 +144,13 @@ ORDER BY
 )
 -- erforderte Ausgabe: Asins von allen Items, die ähnliche Items in anderer Hauptkategorie haben
 SELECT DISTINCT asin_original FROM items_with_similar_in_different_top_category;
+
+
+
+
+-- ANFRAGE 11 ---------------------------------------------------------------------------
+--Produkte die in allen Filialen angeboten werden
+
+SELECT * FROM item i WHERE NOT EXISTS             -- all items, wo kein shop existiert, der die bedingung erfüllt:
+    (SELECT shop_id FROM shops s WHERE NOT EXISTS    -- bedingung: das item wird in dem shop nicht angeboten (es existiert kein angebot mit dem shop und dem preis zusammen)
+   		(SELECT * FROM price p WHERE p.asin = i.asin AND p.price_shop_id = s.shop_id))   
