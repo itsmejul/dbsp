@@ -151,6 +151,28 @@ SELECT DISTINCT asin_original FROM items_with_similar_in_different_top_category;
 -- ANFRAGE 11 ---------------------------------------------------------------------------
 --Produkte die in allen Filialen angeboten werden
 
+SELECT DISTINCT * FROM item i WHERE NOT EXISTS             -- all items, wo kein shop existiert, der die bedingung erfüllt:
+    (SELECT shop_id FROM shops s WHERE NOT EXISTS    -- bedingung: das item wird in dem shop nicht angeboten (es existiert kein angebot mit dem shop und dem preis zusammen)
+   		(SELECT * FROM price p WHERE p.asin = i.asin AND p.price_shop_id = s.shop_id)) 
+
+-- ANFRAGE 12---------------------------------------------------------------------------------
+-- in wieviel prozent der fälle von anfrage 11 ist das billigste angebot in leipzig
+-- was ist wenn beide gleiches angeboten haben?
+WITH items_in_all_shops AS (
+	
 SELECT * FROM item i WHERE NOT EXISTS             -- all items, wo kein shop existiert, der die bedingung erfüllt:
     (SELECT shop_id FROM shops s WHERE NOT EXISTS    -- bedingung: das item wird in dem shop nicht angeboten (es existiert kein angebot mit dem shop und dem preis zusammen)
-   		(SELECT * FROM price p WHERE p.asin = i.asin AND p.price_shop_id = s.shop_id))   
+   		(SELECT * FROM price p WHERE p.asin = i.asin AND p.price_shop_id = s.shop_id)) 
+),
+number_leipzig AS
+(
+SELECT COUNT (*) AS num1 FROM (       --125 items haben in lpz kleinsten preis, 85 in dresden. restliche 93 haben bei beiden keinen preis
+	SELECT p1.price_shop_id, p1.asin FROM price p1, items_in_all_shops i WHERE p1.price_value = (  -- finde für jedes item den shop mit dem kleisten preis
+         SELECT MIN(price_value) FROM price p WHERE p.asin = i.asin) -- finde für jedes item den kleisten preis
+) WHERE price_shop_id = 1    --noch ändern sodass nach name gesucht wird mit with ...as select für die id
+),
+number_total AS
+(
+SELECT COUNT(*) AS num2 FROM items_in_all_shops -- Anzahl items die in allen shops sind
+) 
+SELECT CAST(nl.num1 AS float) / CAST(nt.num2 AS float) AS prozentsatz FROM number_leipzig nl, number_total nt;
