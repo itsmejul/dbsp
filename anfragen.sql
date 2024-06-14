@@ -42,7 +42,11 @@ SELECT DISTINCT i.asin, p.price_value  FROM item i NATURAL JOIN price p WHERE NO
 -- Negative Preise rauslöschen,dann passt das
 SELECT * FROM price p1, price p2 WHERE p1.asin = p2.asin AND p1.price_value > 2 * p2.price_value;
 
+-- ANFRAGE 5
+SELECT DISTINCT r1.asin FROM product_reviews r1, product_reviews r2 WHERE r1.asin = r2.asin AND r1.rating = 1 AND r2.rating = 5
+
 -- ANFRAGE 6
 -- FÜR WIE VIELE PRODUKTE GIBT ES GAR KEINE REZENSIONEN
 SELECT COUNT(asin) as number_without_reviews FROM (
 SELECT * FROM item i WHERE NOT EXISTS (SELECT * FROM product_reviews r WHERE r.asin = i.asin))
+
