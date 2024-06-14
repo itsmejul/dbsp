@@ -50,3 +50,7 @@ SELECT DISTINCT r1.asin FROM product_reviews r1, product_reviews r2 WHERE r1.asi
 SELECT COUNT(asin) as number_without_reviews FROM (
 SELECT * FROM item i WHERE NOT EXISTS (SELECT * FROM product_reviews r WHERE r.asin = i.asin))
 
+-- ANFRAGE 7
+SELECT  c.username, r.number_of_reviews FROM (
+SELECT DISTINCT customer_id, COUNT(asin) number_of_reviews FROM product_reviews 
+GROUP BY customer_id having COUNT(asin) > 9) r NATURAL JOIN customer c
