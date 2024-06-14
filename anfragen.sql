@@ -54,3 +54,12 @@ SELECT * FROM item i WHERE NOT EXISTS (SELECT * FROM product_reviews r WHERE r.a
 SELECT  c.username, r.number_of_reviews FROM (
 SELECT DISTINCT customer_id, COUNT(asin) number_of_reviews FROM product_reviews 
 GROUP BY customer_id having COUNT(asin) > 9) r NATURAL JOIN customer c
+
+
+--ANFRAGE 8
+
+SELECT DISTINCT a.author_name FROM author a WHERE EXISTS (
+	(SELECT director_name AS person_name FROM director d, item i WHERE d.director_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book') --Alle die auch DIRECTOR sind
+UNION	(SELECT creator_name AS person_name FROM creator d, item i WHERE d.creator_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book') --Alle die auch Creator sind
+UNION (SELECT actor_name AS person_name FROM actor d, item i WHERE d.actor_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book')  -- Alle die auch ACTOR sind
+UNION (SELECT artist_name AS person_name FROM artist d, item i WHERE d.artist_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book')); -- Alle die auch ARTIST sind
