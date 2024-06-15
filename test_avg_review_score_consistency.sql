@@ -1,3 +1,7 @@
+-- Testprogramm für die dynamische Berechnung von avg_review_score
+-- Alle Schritte sind einzeln auszuführen, am besten sieht man es wenn man es testet, bevor die Daten eingelesen werden.
+-- Aber die create_table.sql und triggers.sql müssen vorher ausgeführt werden
+
 -- 1. Erstelle neues Item und teste Konsistenz von avg_review_score
 INSERT INTO item (asin, title, ean)
 VALUES	('123451test', 'TESTITEM FÜR TRIGGERS', '1231234512345');
