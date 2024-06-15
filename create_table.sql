@@ -26,11 +26,13 @@ CREATE TABLE item (
     title VARCHAR(255) NOT NULL,
     pgroup VARCHAR(5),
     salesrank INTEGER,
+	avg_review_score FLOAT,
     ean VARCHAR(13) UNIQUE NOT NULL,--ob NULL akzeptieren mit  OR NULL?
 	CONSTRAINT ean_numeric CHECK (ean ~ '^[0-9]{13}$'), --ean evtl auch andere Länge?
     picture TEXT,
     detailpage TEXT
 );
+
 --SELECT * FROM item
 -- PRICE ALS EXTRA RELATION, DA EIN ITEM MEHRERE PREISE HABEN KANN (zB NEU UND SECOND HAND)
 DROP TABLE IF EXISTS price CASCADE;
@@ -42,7 +44,7 @@ CREATE TABLE price(
     price_currency VARCHAR(3),
     price_value INTEGER,
     price_shop_id INTEGER,
-	avg_review_score float,
+	
     FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE,
 	FOREIGN KEY (price_shop_id) REFERENCES shops(shop_id) ON DELETE CASCADE
 );

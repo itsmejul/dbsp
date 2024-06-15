@@ -176,3 +176,11 @@ number_total AS
 SELECT COUNT(*) AS num2 FROM items_in_all_shops -- Anzahl items die in allen shops sind
 ) 
 SELECT CAST(nl.num1 AS float) / CAST(nt.num2 AS float) AS prozentsatz FROM number_leipzig nl, number_total nt;
+
+
+
+
+
+
+SELECT * FROM item WHERE avg_review_score IS NOT NULL
+
