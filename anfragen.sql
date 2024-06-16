@@ -4,6 +4,8 @@ SELECT * FROM item i WHERE pgroup = 'Book' AND NOT EXISTS (SELECT * FROM bookspe
 -- ANFRAGE 1--------------------------------------------------------------------------------------------------
 -- Wieviele Produkte jeden Typs (Buch, Musik-CD, DVD) sind in der Datenbank erfasst? 
 -- Hinweis: Geben Sie das Ergebnis in einer 3-spaltigen Relation aus.
+DROP TABLE IF EXISTS query_1;
+CREATE TABLE query_1 AS
 SELECT * FROM 
 	(SELECT COUNT (book_id) num_books FROM bookspec),
 	(SELECT COUNT (cd_id) num_cds FROM musicspec),
@@ -16,6 +18,8 @@ SELECT * FROM
 -- Wie werden gleiche durchschnittliche Ratings behandelt?
 
 -- nimmt aus der hilfsmethode immer die 5 mit dem höchsten rating pro type
+DROP TABLE IF EXISTS query_2;
+CREATE TABLE query_2 AS
 SELECT
     *
 FROM
@@ -31,15 +35,14 @@ WHERE
     row_num <= 5; -- Nimm nur die 5 ersten Ergebnisse pro Typ, also ersten 5 row_number
 
 
-Select distinct asin FROM item
 	
 -- ANFRAGE 3--------------------------------------------------------------------------------------------------------------
--- Für welche Produkte gibt es im Moment kein Angebot? -- geht noch nicht, anzahlen sind iwie komisch insgesamt
+-- Für welche Produkte gibt es im Moment kein Angebot?
 -- die anfrage sollte gehen
 SELECT DISTINCT i.asin, p.price_value  FROM item i NATURAL JOIN price p WHERE NOT EXISTS (SELECT * FROM price p WHERE i.asin = p.asin AND p.price_value IS NOT NULL)
 
--- ANFRAGE 4
--- Negative Preise rauslöschen,dann passt das
+-- ANFRAGE 4---------------------------------------------------------------------------------------------------------------
+	-- bevor die items ohne spec gelöscht wurden, waren es 4 ergebnisse
 SELECT * FROM price p1, price p2 WHERE p1.asin = p2.asin AND p1.price_value > 2 * p2.price_value;
 
 -- ANFRAGE 5

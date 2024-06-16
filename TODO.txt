@@ -18,6 +18,7 @@ fehler überbegriffe zB syntaxfehler (die 5 arten aus aufgabe) sodass man nach d
 (NEGATIVER PREIS RAUSLÖSCHEN)
 
 vlt trigger, dass wenn zB bookspec gelöscht wird, auch das zugehörige item gelöscht wird
+oder dass man die specs nicht löschen darf mit exception, und immer nur über das item löschen darf
 
 autor auf bookspec FK statt item mappen, artist auf music spec statt item etc
 

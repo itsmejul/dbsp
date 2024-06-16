@@ -73,3 +73,4 @@ CREATE TRIGGER before_delete_customer
 BEFORE DELETE ON customer
 FOR EACH ROW
 EXECUTE FUNCTION update_reviews_to_deleted_user();
+
