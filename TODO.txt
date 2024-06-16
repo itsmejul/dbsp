@@ -8,7 +8,7 @@
 
 (preis unique wenn die ganze kombination aus allen gleich ist beim einfügen)
 
-UPDATE CASCADE überall
+(UPDATE CASCADE überall)
 
 fehler bei wen preis geupdated also anzahl stimmt in item und bookspec nicht oder wenn welche aus bookspec gelöscht werden
 

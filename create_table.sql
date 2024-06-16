@@ -47,8 +47,8 @@ CREATE TABLE price(
 	
     UNIQUE (price_shop_id, price_state, asin),  
 	-- Verbesserung aus Testat 1: Gleiches Produkt im gleichen Zustand im gleichen Shop sollte immer gleichen Preis haben
-    FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE,
-	FOREIGN KEY (price_shop_id) REFERENCES shops(shop_id) ON DELETE CASCADE
+    FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (price_shop_id) REFERENCES shops(shop_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM price
 ---------------------------------------------------------------------
@@ -58,7 +58,7 @@ CREATE TABLE lists(
 	asin VARCHAR(10)NOT NULL,
 	listname VARCHAR(255) NOT NULL,
 	PRIMARY KEY (asin, listname),
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM lists
 --gleiche Items
@@ -79,7 +79,7 @@ CREATE TABLE author(
 	author_name VARCHAR(255) NOT NULL,
 	asin VARCHAR(10) NOT NULL,
 	PRIMARY KEY (author_name, asin),
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM author
 --Actors
@@ -88,7 +88,7 @@ CREATE TABLE actor(
 	actor_name VARCHAR(255) NOT NULL,
 	asin VARCHAR(10) NOT NULL,
 	PRIMARY KEY (actor_name, asin),
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM actor
 --Artists
@@ -97,7 +97,7 @@ CREATE TABLE artist(
 	artist_name VARCHAR(255) NOT NULL,
 	asin VARCHAR(10) NOT NULL,
 	PRIMARY KEY (artist_name, asin),
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM artist
 --director
@@ -106,7 +106,7 @@ CREATE TABLE director(
 	director_name VARCHAR(255) NOT NULL,
 	asin VARCHAR(10) NOT NULL,
 	PRIMARY KEY (director_name, asin),
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM director
 --creator
@@ -115,7 +115,7 @@ CREATE TABLE creator(
 	creator_name VARCHAR(255) NOT NULL,
 	asin VARCHAR(10) NOT NULL,
 	PRIMARY KEY (creator_name, asin),
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM creator
 --labels
@@ -124,7 +124,7 @@ CREATE TABLE labels(
 	label_name VARCHAR(255) NOT NULL,
 	asin VARCHAR(10) NOT NULL,
 	PRIMARY KEY (label_name, asin),
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM labels
 --publishers
@@ -133,7 +133,7 @@ CREATE TABLE publishers(
 	publisher_name VARCHAR(255) NOT NULL,
 	asin VARCHAR(10) NOT NULL,
 	PRIMARY KEY (publisher_name, asin),
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM publishers
 --studios
@@ -142,7 +142,7 @@ CREATE TABLE studios(
 	studio_name VARCHAR(255) NOT NULL,
 	asin VARCHAR(10) NOT NULL,
 	PRIMARY KEY (studio_name, asin),
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM studios
 --tracks
@@ -151,13 +151,13 @@ CREATE TABLE tracks (
 	asin VARCHAR(10) NOT NULL,
 	track_title VARCHAR(255) NOT NULL,
 	PRIMARY KEY (track_title, asin),
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM tracks
 --audiotext
 DROP TABLE IF EXISTS audiotext CASCADE;
 CREATE TABLE audiotext (
-    asin VARCHAR(10) REFERENCES item(asin) ON DELETE CASCADE,  
+    asin VARCHAR(10) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE,  
     type VARCHAR(50) NOT NULL,
     language VARCHAR(20) NOT NULL,
     audioformat VARCHAR(50)
@@ -180,7 +180,7 @@ CREATE TABLE bookspec(
 	pages INTEGER,
 	CONSTRAINT valid_pages CHECK (pages > 0),
 	publication_date DATE NOT NULL,
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM bookspec
 --dvdspecs
@@ -199,7 +199,7 @@ CREATE TABLE dvdspec(
 	CONSTRAINT theatr_release_year CHECK (theatr_release ~ '^[0-9]{4}'),
 	upc VARCHAR(12) UNIQUE NOT NULL,
 	CONSTRAINT dvd_upc_numeric CHECK (upc ~ '^[0-9]{12}$'), --ob NULL akzeptieren mit  OR NULL? es gibt ja schon ean
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM dvdspec
 --musicspecs
@@ -214,15 +214,15 @@ CREATE TABLE musicspec(
 	releasedate DATE NOT NULL,
 	upc VARCHAR(12) UNIQUE NOT NULL,
 	CONSTRAINT music_upc_numeric CHECK (upc ~ '^[0-9]{12}$'), --ob NULL akzeptieren mit  OR NULL? es gibt ja schon ean
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM musicspec
 --Kategorien
 DROP TABLE IF EXISTS categories CASCADE;
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
-    title TEXT NOT NULL,
-    parent_id INTEGER REFERENCES categories(id) ON DELETE CASCADE
+    title TEXT NOT NULL, 
+    parent_id INTEGER REFERENCES categories(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM categories
 --Kategorien zu item match
@@ -231,7 +231,7 @@ CREATE TABLE item_categories (
     asin VARCHAR(10) NOT NULL,
     category_id INTEGER REFERENCES categories(id),
 	PRIMARY KEY(asin, category_id),
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM item_categories
 
@@ -274,7 +274,7 @@ CREATE TABLE IF NOT EXISTS product_reviews (
 	-- ON DELETE /UPDATE durch deleted user ersetzen!!!! 
     summary TEXT,
     review_content TEXT,
-	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE
+	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE
 );
 --SELECT * FROM product_reviews
 
