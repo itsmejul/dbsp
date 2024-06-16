@@ -45,6 +45,8 @@ CREATE TABLE price(
     price_value INTEGER,
     price_shop_id INTEGER,
 	
+	CONSTRAINT price_non_negative CHECK (price_value >= 0 OR price_value IS NULL ),
+	-- Verbesserung aus Testat 1: keine negativen Preise akzeptieren
     UNIQUE (price_shop_id, price_state, asin),  
 	-- Verbesserung aus Testat 1: Gleiches Produkt im gleichen Zustand im gleichen Shop sollte immer gleichen Preis haben
     FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE ON UPDATE CASCADE,
