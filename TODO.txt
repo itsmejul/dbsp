@@ -2,11 +2,11 @@
 (fehlende kunden relation)
 (FS auf kunde von review)
 (smi product PRIMARY KEY)
-wie handeln wir deleted user oder gast???
-- on delete /update von user werden reviews durch gelöschter user ersetzt
-- soll dann einfach der username durch deleted user ersetzt werden aber er bleibt trotzdem eigener user mit eigener id etc, oder soll er komplett gelöscht werden und nur seine reviews  auf einen gemeinsamen deleted user verweisen?
+(wie handeln wir deleted user oder gast???)
+(- on delete /update von user werden reviews durch gelöschter user ersetzt)
+(- soll dann einfach der username durch deleted user ersetzt werden aber er bleibt trotzdem eigener user mit eigener id etc, oder soll er komplett gelöscht werden und nur seine reviews  auf einen gemeinsamen deleted user verweisen?)
 
-preis unique wenn die ganze kombination aus allen gleich ist beim einfügen
+(preis unique wenn die ganze kombination aus allen gleich ist beim einfügen)
 
 UPDATE CASCADE überall
 

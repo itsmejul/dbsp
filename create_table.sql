@@ -45,6 +45,8 @@ CREATE TABLE price(
     price_value INTEGER,
     price_shop_id INTEGER,
 	
+    UNIQUE (price_shop_id, price_state, asin),  
+	-- Verbesserung aus Testat 1: Gleiches Produkt im gleichen Zustand im gleichen Shop sollte immer gleichen Preis haben
     FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE,
 	FOREIGN KEY (price_shop_id) REFERENCES shops(shop_id) ON DELETE CASCADE
 );
