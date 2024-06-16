@@ -10,17 +10,18 @@
 
 (UPDATE CASCADE überall)
 
-fehler bei wen preis geupdated also anzahl stimmt in item und bookspec nicht oder wenn welche aus bookspec gelöscht werden
 
 RM modell falsch absgeschrieben
 
 fehler überbegriffe zB syntaxfehler (die 5 arten aus aufgabe) sodass man nach den 5 gruppieren kann
 
-NEGATIVER PREIS RAUSLÖSCHEN
+(NEGATIVER PREIS RAUSLÖSCHEN)
 
+vlt trigger, dass wenn zB bookspec gelöscht wird, auch das zugehörige item gelöscht wird
 
 autor auf bookspec FK statt item mappen, artist auf music spec statt item etc
 
+(fehler bei wen preis geupdated also anzahl stimmt in item und bookspec nicht oder wenn welche aus bookspec gelöscht werden)
 
 ## Anfragen
 

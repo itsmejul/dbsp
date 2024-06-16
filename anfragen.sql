@@ -189,3 +189,4 @@ SELECT * FROM customer
 SELECT * FROM customer WHERE customer_id = 1
 SELECT * FROM product_reviews WHERE customer_id = 0
 DELETE FROM customer WHERE customer_id = 2
+

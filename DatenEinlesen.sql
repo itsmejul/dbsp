@@ -811,4 +811,16 @@ DROP TABLE IF EXISTS xml_data;
 -----------------------------------------------------------------------
 
 
-
+-- SELECT * FROM bookspec  -- 553
+-- SELECT * FROM item WHERE pgroup = 'Book' -- 709
+-- SELECT * FROM item i WHERE i.pgroup = 'Book' AND NOT EXISTS (SELECT * FROM bookspec b WHERE b.asin = i.asin) --156
+-- diese 156 sind in item aber nicht in bookspec. warum?
+-- SELECT * FROM error_input WHERE entity_name = 'DVDspec' -- 156. also die müssen alle noch aus preis gelöscht werden
+-- also so reverse constraint mäßig oder mit trigger
+-- SELECT * FROM musicspec 1140
+-- SELECT * FROM item WHERE pgroup = 'Music' 1885
+-- SELECT * FROM dvdspec 384
+-- SELECT * FROM item WHERE pgroup = 'DVD' 688
+DELETE FROM item
+WHERE asin NOT IN ((SELECT asin FROM bookspec) UNION (Select asin FROM musicspec) UNION (SELECT asin FROM dvdspec));
+-- Alle aus item löschen, die bei bookspec, musicspec oder dvdspec rejected wurden
