@@ -267,7 +267,9 @@ CREATE TABLE IF NOT EXISTS product_reviews (
     helpful INTEGER DEFAULT 0,
     reviewdate DATE NOT NULL,
     customer_id INTEGER,
-	FOREIGN KEY (customer_id) REFERENCES customer(customer_id), -- ON DELETE /UPDATE durch deleted user ersetzen!!!!
+	FOREIGN KEY (customer_id) REFERENCES customer(customer_id) ON DELETE NO ACTION , -- no action ist wichtig, damit reviews nicht gelöscht werden,
+	-- sondern dass der user durch deleted user ersetzt werden kann
+	-- ON DELETE /UPDATE durch deleted user ersetzen!!!! 
     summary TEXT,
     review_content TEXT,
 	FOREIGN KEY (asin) REFERENCES item(asin) ON DELETE CASCADE

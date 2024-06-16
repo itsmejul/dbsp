@@ -50,3 +50,26 @@ FOR EACH ROW
 EXECUTE FUNCTION update_avg_review();
 
 -- SELECT * FROM ITEM WHERE avg_review_score IS NOT NULL
+
+
+
+
+-- Trigger-Funktion, die ausgelöst wird, wenn Customer gelöscht wird. 
+-- Sie ersetzt die customer_id durch die id vom deleted user
+CREATE OR REPLACE FUNCTION update_reviews_to_deleted_user()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Update customer_id auf deleted user
+    UPDATE product_reviews
+    SET customer_id = 0
+    WHERE customer_id = OLD.customer_id;
+    
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger, der auslöst, bevor ein Customer gelöscht wird
+CREATE TRIGGER before_delete_customer
+BEFORE DELETE ON customer
+FOR EACH ROW
+EXECUTE FUNCTION update_reviews_to_deleted_user();

@@ -683,6 +683,8 @@ DELIMITER ','
 CSV HEADER;
 
 
+-- Extra Deleted User mit ID 0 wird zuerst angelegt. 
+INSERT INTO customer (customer_id, username) VALUES (0, 'Deleted User');
 
 
 -- ALle Customer aus der reviews datei in die customer einfügen

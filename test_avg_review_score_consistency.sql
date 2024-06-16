@@ -30,7 +30,7 @@ SELECT * FROM ITEM WHERE asin = '123451test';
 -- 5. Update review, zB ändere rating von 1 zu 2
 UPDATE product_reviews 
   SET rating = 2
-  WHERE review_id = '1';   --hier die review_id der zu updatenden review eingeben
+  WHERE review_id = '2';   --hier die review_id der zu updatenden review eingeben
 SELECT * FROM ITEM WHERE asin = '123451test';
 
 

@@ -184,3 +184,8 @@ SELECT CAST(nl.num1 AS float) / CAST(nt.num2 AS float) AS prozentsatz FROM numbe
 
 SELECT * FROM item WHERE avg_review_score IS NOT NULL
 
+-- Testanfragen zum löschen von Nutzern
+SELECT * FROM customer
+SELECT * FROM customer WHERE customer_id = 1
+SELECT * FROM product_reviews WHERE customer_id = 0
+DELETE FROM customer WHERE customer_id = 2
