@@ -63,5 +63,6 @@ ANZAHLEN STIMMEN NICHT ÜBEREIN
 
 
 ALLE ANFRAGEN MIT AUSGABEN IN TXT DATEI GUT FORMATIERT EXPORTIERN
+psql -U postgres -d dbsp -c "SELECT * FROM query_1" -A -t > export_query_1.txt
 
 ------------TEIL 2B ÄNDERUNGEN-------!!!!!!!!!!
