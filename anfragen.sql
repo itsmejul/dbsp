@@ -39,28 +39,39 @@ WHERE
 -- ANFRAGE 3--------------------------------------------------------------------------------------------------------------
 -- Für welche Produkte gibt es im Moment kein Angebot?
 -- die anfrage sollte gehen
-SELECT DISTINCT i.asin, p.price_value  FROM item i NATURAL JOIN price p WHERE NOT EXISTS (SELECT * FROM price p WHERE i.asin = p.asin AND p.price_value IS NOT NULL)
-
+DROP TABLE IF EXISTS query_3;
+CREATE TABLE query_3 AS
+SELECT DISTINCT i.asin, i.title  FROM item i NATURAL JOIN price p WHERE NOT EXISTS (SELECT * FROM price p WHERE i.asin = p.asin AND p.price_value IS NOT NULL)
+ORDER BY i.title;
 -- ANFRAGE 4---------------------------------------------------------------------------------------------------------------
 	-- bevor die items ohne spec gelöscht wurden, waren es 4 ergebnisse
-SELECT * FROM price p1, price p2 WHERE p1.asin = p2.asin AND p1.price_value > 2 * p2.price_value;
+DROP TABLE IF EXISTS query_4;
+CREATE TABLE query_4 AS
+SELECT p1.asin, p1.price_value AS Preis_1, p2.price_value AS Preis_2 FROM price p1, price p2 WHERE p1.asin = p2.asin AND p1.price_value > 2 * p2.price_value;
 
 -- ANFRAGE 5
-SELECT DISTINCT r1.asin FROM product_reviews r1, product_reviews r2 WHERE r1.asin = r2.asin AND r1.rating = 1 AND r2.rating = 5
+DROP TABLE IF EXISTS query_5;
+CREATE TABLE query_5 AS
+SELECT DISTINCT r1.asin FROM product_reviews r1, product_reviews r2 WHERE r1.asin = r2.asin AND r1.rating = 1 AND r2.rating = 5;
 
 -- ANFRAGE 6
 -- FÜR WIE VIELE PRODUKTE GIBT ES GAR KEINE REZENSIONEN
+DROP TABLE IF EXISTS query_6;
+CREATE TABLE query_6 AS
 SELECT COUNT(asin) as number_without_reviews FROM (
 SELECT * FROM item i WHERE NOT EXISTS (SELECT * FROM product_reviews r WHERE r.asin = i.asin))
 
 -- ANFRAGE 7
+	DROP TABLE IF EXISTS query_7;
+CREATE TABLE query_7 AS
 SELECT  c.username, r.number_of_reviews FROM (
 SELECT DISTINCT customer_id, COUNT(asin) number_of_reviews FROM product_reviews 
 GROUP BY customer_id having COUNT(asin) > 9) r NATURAL JOIN customer c
 
 
 --ANFRAGE 8
-
+DROP TABLE IF EXISTS query_8;
+CREATE TABLE query_8 AS
 SELECT DISTINCT a.author_name FROM author a WHERE EXISTS (
 	(SELECT director_name AS person_name FROM director d, item i WHERE d.director_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book') --Alle die auch DIRECTOR sind
 UNION	(SELECT creator_name AS person_name FROM creator d, item i WHERE d.creator_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book') --Alle die auch Creator sind
@@ -68,6 +79,8 @@ UNION (SELECT actor_name AS person_name FROM actor d, item i WHERE d.actor_name 
 UNION (SELECT artist_name AS person_name FROM artist d, item i WHERE d.artist_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book')); -- Alle die auch ARTIST sind
 
 --ANFRAGE 9
+DROP TABLE IF EXISTS query_9;
+CREATE TABLE query_9 AS
 SELECT AVG(number_of_tracks) FROM (
 SELECT asin, COUNT(track_title) AS number_of_tracks FROM tracks GROUP BY asin);
 
@@ -75,6 +88,8 @@ SELECT asin, COUNT(track_title) AS number_of_tracks FROM tracks GROUP BY asin);
 -- ANFRAGE 10
 -- Hauptcategorien für jedes item bestimmen
 -- erst alle kategorien auf ihre hauptkategorie mappen
+DROP TABLE IF EXISTS query_10;
+CREATE TABLE query_10 AS
 WITH RECURSIVE category_hierarchy AS (
     -- Standardfall: alle hauptkategorien
     SELECT 
@@ -153,14 +168,18 @@ SELECT DISTINCT asin_original FROM items_with_similar_in_different_top_category;
 
 -- ANFRAGE 11 ---------------------------------------------------------------------------
 --Produkte die in allen Filialen angeboten werden
-
-SELECT DISTINCT * FROM item i WHERE NOT EXISTS             -- all items, wo kein shop existiert, der die bedingung erfüllt:
+DROP TABLE IF EXISTS query_11;
+CREATE TABLE query_11 AS
+SELECT DISTINCT i.asin, i.title FROM item i WHERE NOT EXISTS             -- all items, wo kein shop existiert, der die bedingung erfüllt:
     (SELECT shop_id FROM shops s WHERE NOT EXISTS    -- bedingung: das item wird in dem shop nicht angeboten (es existiert kein angebot mit dem shop und dem preis zusammen)
    		(SELECT * FROM price p WHERE p.asin = i.asin AND p.price_shop_id = s.shop_id)) 
+ORDER BY i.title;
 
 -- ANFRAGE 12---------------------------------------------------------------------------------
 -- in wieviel prozent der fälle von anfrage 11 ist das billigste angebot in leipzig
 -- was ist wenn beide gleiches angeboten haben?
+DROP TABLE IF EXISTS query_12;
+CREATE TABLE query_12 AS
 WITH items_in_all_shops AS (
 	
 SELECT * FROM item i WHERE NOT EXISTS             -- all items, wo kein shop existiert, der die bedingung erfüllt:
