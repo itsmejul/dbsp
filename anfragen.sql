@@ -11,6 +11,7 @@ SELECT * FROM
 	(SELECT COUNT (cd_id) num_cds FROM musicspec),
 	(SELECT COUNT (dvd_id) num_dvds FROM dvdspec)
 	;
+SELECT * FROM query_1;
 
 -- ANFRAGE 2---------------------------------------------------------------------------------------------
 -- Nennen Sie die 5 besten Produkte jedes Typs (Buch, Musik-CD, DVD) sortiert nach dem durchschnittlichem Rating. 
@@ -33,7 +34,7 @@ FROM
 )
 WHERE
     row_num <= 5; -- Nimm nur die 5 ersten Ergebnisse pro Typ, also ersten 5 row_number
-
+SELECT * FROM query_2;
 
 	
 -- ANFRAGE 3--------------------------------------------------------------------------------------------------------------
@@ -43,30 +44,34 @@ DROP TABLE IF EXISTS query_3;
 CREATE TABLE query_3 AS
 SELECT DISTINCT i.asin, i.title  FROM item i NATURAL JOIN price p WHERE NOT EXISTS (SELECT * FROM price p WHERE i.asin = p.asin AND p.price_value IS NOT NULL)
 ORDER BY i.title;
+SELECT * FROM query_3;
 -- ANFRAGE 4---------------------------------------------------------------------------------------------------------------
 	-- bevor die items ohne spec gelöscht wurden, waren es 4 ergebnisse
 DROP TABLE IF EXISTS query_4;
 CREATE TABLE query_4 AS
 SELECT p1.asin, p1.price_value AS Preis_1, p2.price_value AS Preis_2 FROM price p1, price p2 WHERE p1.asin = p2.asin AND p1.price_value > 2 * p2.price_value;
-
+SELECT * FROM query_4;
 -- ANFRAGE 5
 DROP TABLE IF EXISTS query_5;
 CREATE TABLE query_5 AS
 SELECT DISTINCT r1.asin FROM product_reviews r1, product_reviews r2 WHERE r1.asin = r2.asin AND r1.rating = 1 AND r2.rating = 5;
-
+SELECT * FROM query_5;
 -- ANFRAGE 6
 -- FÜR WIE VIELE PRODUKTE GIBT ES GAR KEINE REZENSIONEN
 DROP TABLE IF EXISTS query_6;
 CREATE TABLE query_6 AS
 SELECT COUNT(asin) as number_without_reviews FROM (
-SELECT * FROM item i WHERE NOT EXISTS (SELECT * FROM product_reviews r WHERE r.asin = i.asin))
+SELECT * FROM item i WHERE NOT EXISTS (SELECT * FROM product_reviews r WHERE r.asin = i.asin));
+SELECT * FROM query_6;
 
 -- ANFRAGE 7
 	DROP TABLE IF EXISTS query_7;
 CREATE TABLE query_7 AS
 SELECT  c.username, r.number_of_reviews FROM (
 SELECT DISTINCT customer_id, COUNT(asin) number_of_reviews FROM product_reviews 
-GROUP BY customer_id having COUNT(asin) > 9) r NATURAL JOIN customer c
+GROUP BY customer_id having COUNT(asin) > 9) r NATURAL JOIN customer c;
+SELECT * FROM query_7;
+
 
 
 --ANFRAGE 8
@@ -77,13 +82,14 @@ SELECT DISTINCT a.author_name FROM author a WHERE EXISTS (
 UNION	(SELECT creator_name AS person_name FROM creator d, item i WHERE d.creator_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book') --Alle die auch Creator sind
 UNION (SELECT actor_name AS person_name FROM actor d, item i WHERE d.actor_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book')  -- Alle die auch ACTOR sind
 UNION (SELECT artist_name AS person_name FROM artist d, item i WHERE d.artist_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book')); -- Alle die auch ARTIST sind
+SELECT * FROM query_8;
 
 --ANFRAGE 9
 DROP TABLE IF EXISTS query_9;
 CREATE TABLE query_9 AS
 SELECT AVG(number_of_tracks) FROM (
 SELECT asin, COUNT(track_title) AS number_of_tracks FROM tracks GROUP BY asin);
-
+SELECT * FROM query_9;
 
 -- ANFRAGE 10
 -- Hauptcategorien für jedes item bestimmen
@@ -162,7 +168,7 @@ ORDER BY
 )
 -- erforderte Ausgabe: Asins von allen Items, die ähnliche Items in anderer Hauptkategorie haben
 SELECT DISTINCT asin_original FROM items_with_similar_in_different_top_category;
-
+SELECT * FROM query_10;
 
 
 
@@ -174,6 +180,7 @@ SELECT DISTINCT i.asin, i.title FROM item i WHERE NOT EXISTS             -- all 
     (SELECT shop_id FROM shops s WHERE NOT EXISTS    -- bedingung: das item wird in dem shop nicht angeboten (es existiert kein angebot mit dem shop und dem preis zusammen)
    		(SELECT * FROM price p WHERE p.asin = i.asin AND p.price_shop_id = s.shop_id)) 
 ORDER BY i.title;
+SELECT * FROM query_11;
 
 -- ANFRAGE 12---------------------------------------------------------------------------------
 -- in wieviel prozent der fälle von anfrage 11 ist das billigste angebot in leipzig
@@ -198,6 +205,9 @@ number_total AS
 SELECT COUNT(*) AS num2 FROM items_in_all_shops -- Anzahl items die in allen shops sind
 ) 
 SELECT CAST(nl.num1 AS float) / CAST(nt.num2 AS float) AS prozentsatz FROM number_leipzig nl, number_total nt;
+SELECT * FROM query_12;
+
+
 
 
 
