@@ -1,6 +1,6 @@
 -- Testprogramm für die dynamische Berechnung von avg_review_score
--- Alle Schritte sind einzeln auszuführen, am besten sieht man es wenn man es testet, bevor die Daten eingelesen werden.
--- Aber die create_table.sql und triggers.sql müssen vorher ausgeführt werden
+-- Alle Schritte sind einzeln auszuführen
+-- Die create_table.sql und triggers.sql müssen vorher ausgeführt werden
 
 -- 1. Erstelle neues Item und teste Konsistenz von avg_review_score
 INSERT INTO item (asin, title, ean)
@@ -30,19 +30,19 @@ SELECT * FROM ITEM WHERE asin = '123451test';
 -- 5. Update review, zB ändere rating von 1 zu 2
 UPDATE product_reviews 
   SET rating = 2
-  WHERE review_id = '2';   --hier die review_id der zu updatenden review eingeben
+  WHERE review_id = '6333';   --hier die review_id der zu updatenden review eingeben
 SELECT * FROM ITEM WHERE asin = '123451test';
 
 
 -- 6. Lösche review
-DELETE FROM product_reviews WHERE review_id = '2'; -- hier die review_id der zu löschenden review eingeben
+DELETE FROM product_reviews WHERE review_id = '6333'; -- hier die review_id der zu löschenden review eingeben
 SELECT * FROM ITEM WHERE asin = '123451test';
 
 
 
 
 
--- extra test statement, was beim inserten die neue review_id zurückgibt
+-- zusätzliches Test-Statement, das beim inserten die neue review_id zurückgibt
 WITH new_review AS 
 (INSERT INTO product_reviews (asin, rating, reviewdate)
 VALUES ('123451test', 1, '2024-05-14')

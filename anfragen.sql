@@ -22,18 +22,16 @@ SELECT * FROM query_1;
 DROP TABLE IF EXISTS query_2;
 CREATE TABLE query_2 AS
 SELECT
-    *
+    asin, average_rating, pgroup
 FROM
-    (SELECT
-        *,
-        ROW_NUMBER() OVER (PARTITION BY pgroup ORDER BY average_rating DESC) AS row_num -- row_number zählt die zeilen
-    FROM
-        (SELECT * FROM
+	(SELECT *, ROW_NUMBER() OVER (PARTITION BY pgroup ORDER BY average_rating DESC) AS row_num
+	FROM
+        	(SELECT * FROM
 			(SELECT asin, AVG(rating) average_rating FROM product_reviews r GROUP BY asin) NATURAL JOIN (SELECT asin, pgroup FROM item)
 		)
-)
-WHERE
-    row_num <= 5; -- Nimm nur die 5 ersten Ergebnisse pro Typ, also ersten 5 row_number
+    	)
+WHERE row_num <= 5
+ORDER BY pgroup, asin; -- Nimm nur die 5 ersten Ergebnisse pro Typ, also ersten 5 row_number
 SELECT * FROM query_2;
 
 	
@@ -51,6 +49,8 @@ DROP TABLE IF EXISTS query_4;
 CREATE TABLE query_4 AS
 SELECT p1.asin, p1.price_value AS Preis_1, p2.price_value AS Preis_2 FROM price p1, price p2 WHERE p1.asin = p2.asin AND p1.price_value > 2 * p2.price_value;
 SELECT * FROM query_4;
+
+--SELECT * FROM price WHERE asin = 'B00004CWTY'
 -- ANFRAGE 5
 DROP TABLE IF EXISTS query_5;
 CREATE TABLE query_5 AS
@@ -84,12 +84,15 @@ UNION (SELECT actor_name AS person_name FROM actor d, item i WHERE d.actor_name 
 UNION (SELECT artist_name AS person_name FROM artist d, item i WHERE d.artist_name = a.author_name AND d.asin = i.asin AND i.pgroup <> 'Book')); -- Alle die auch ARTIST sind
 SELECT * FROM query_8;
 
+SELECT * FROM author WHERE author_name = 'Wolfgang Amadeus Mozart'
+SELECT * FROM ITEM WHERE asin = 'B0006OL5E0'  -- nochmal anschauen
+SELECT * FROM bookspec WHERE asin = 'B0006OL5E0'
 --ANFRAGE 9
 DROP TABLE IF EXISTS query_9;
 CREATE TABLE query_9 AS
 SELECT AVG(number_of_tracks) FROM (
 SELECT asin, COUNT(track_title) AS number_of_tracks FROM tracks GROUP BY asin);
-SELECT * FROM query_9;
+SELECT * FROM query_9; --die ohne tracks rauslöshen??? machen wir das
 
 -- ANFRAGE 10
 -- Hauptcategorien für jedes item bestimmen
@@ -198,7 +201,7 @@ number_leipzig AS
 SELECT COUNT (*) AS num1 FROM (       --125 items haben in lpz kleinsten preis, 85 in dresden. restliche 93 haben bei beiden keinen preis
 	SELECT p1.price_shop_id, p1.asin FROM price p1, items_in_all_shops i WHERE p1.price_value = (  -- finde für jedes item den shop mit dem kleisten preis
          SELECT MIN(price_value) FROM price p WHERE p.asin = i.asin) -- finde für jedes item den kleisten preis
-) WHERE price_shop_id = 1    --noch ändern sodass nach name gesucht wird mit with ...as select für die id
+) WHERE price_shop_id =( SELECT shop_id FROM shops WHERE shop_name = 'Leipzig'  ) --noch ändern sodass nach name gesucht wird mit with ...as select für die id
 ),
 number_total AS
 (

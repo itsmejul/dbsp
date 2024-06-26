@@ -24,7 +24,6 @@ BEGIN
         )
         WHERE asin = NEW.asin;   -- bei update oder insert gibt es NEW keyword, was die neu eingefügte zeile zurückgibt
                                 -- so können wir auf die neue asin zugreifen
-                                  -- Was ist, wenn asin geupdated wird????????????
     END IF;
 
     RETURN NULL;
@@ -49,7 +48,6 @@ AFTER DELETE ON product_reviews
 FOR EACH ROW
 EXECUTE FUNCTION update_avg_review();
 
--- SELECT * FROM ITEM WHERE avg_review_score IS NOT NULL
 
 
 
