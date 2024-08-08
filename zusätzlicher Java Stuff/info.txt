@@ -1,0 +1,6 @@
+https://youtu.be/OGP2R29vzAw?si=OLgRrXpf-svQCqvS
+in eclipse
+rechtsklick auf Java Projekt "JavaJDBC"
+>Build Path >Configure …
+Modulepath> Add external JAR …
+diese JAR im Ordner auswählen!
