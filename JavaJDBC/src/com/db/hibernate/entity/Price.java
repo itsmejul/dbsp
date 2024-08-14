@@ -28,4 +28,71 @@ public class Price {
 	public Price() {
 		
 	}
+
+	public Price(String asin, String price_state, double price_mult, String price_currency, int price_value,
+			int price_shop_id) {
+		this.asin = asin;
+		this.price_state = price_state;
+		this.price_mult = price_mult;
+		this.price_currency = price_currency;
+		this.price_value = price_value;
+		this.price_shop_id = price_shop_id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getAsin() {
+		return asin;
+	}
+
+	public void setAsin(String asin) {
+		this.asin = asin;
+	}
+
+	public String getPrice_state() {
+		return price_state;
+	}
+
+	public void setPrice_state(String price_state) {
+		this.price_state = price_state;
+	}
+
+	public double getPrice_mult() {
+		return price_mult;
+	}
+
+	public void setPrice_mult(double price_mult) {
+		this.price_mult = price_mult;
+	}
+
+	public String getPrice_currency() {
+		return price_currency;
+	}
+
+	public void setPrice_currency(String price_currency) {
+		this.price_currency = price_currency;
+	}
+
+	public int getPrice_value() {
+		return price_value;
+	}
+
+	public void setPrice_value(int price_value) {
+		this.price_value = price_value;
+	}
+
+	public int getPrice_shop_id() {
+		return price_shop_id;
+	}
+
+	public void setPrice_shop_id(int price_shop_id) {
+		this.price_shop_id = price_shop_id;
+	}
+	
 }

@@ -22,4 +22,44 @@ public class CustomerBuyItem {
 	public CustomerBuyItem() {
 		
 	}
+
+	public CustomerBuyItem(int id, String asin, int priceId, String timeOfBuy) {
+		this.id = id;
+		this.asin = asin;
+		this.priceId = priceId;
+		this.timeOfBuy = timeOfBuy;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getAsin() {
+		return asin;
+	}
+
+	public void setAsin(String asin) {
+		this.asin = asin;
+	}
+
+	public int getPriceId() {
+		return priceId;
+	}
+
+	public void setPriceId(int priceId) {
+		this.priceId = priceId;
+	}
+
+	public String getTimeOfBuy() {
+		return timeOfBuy;
+	}
+
+	public void setTimeOfBuy(String timeOfBuy) {
+		this.timeOfBuy = timeOfBuy;
+	}
+	
 }

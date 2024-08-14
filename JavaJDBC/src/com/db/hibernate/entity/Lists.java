@@ -19,4 +19,26 @@ public class Lists {
 	public Lists() {
 		
 	}
+
+	public Lists(String asin, String listname) {
+		this.asin = asin;
+		this.listname = listname;
+	}
+
+	public String getAsin() {
+		return asin;
+	}
+
+	public void setAsin(String asin) {
+		this.asin = asin;
+	}
+
+	public String getListname() {
+		return listname;
+	}
+
+	public void setListname(String listname) {
+		this.listname = listname;
+	}
+	
 }

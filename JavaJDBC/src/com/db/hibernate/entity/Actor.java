@@ -19,4 +19,26 @@ public class Actor {
 	public Actor() {
 		
 	}
+
+	public Actor(String name, String asin) {
+		this.name = name;
+		this.asin = asin;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAsin() {
+		return asin;
+	}
+
+	public void setAsin(String asin) {
+		this.asin = asin;
+	}
+	
 }

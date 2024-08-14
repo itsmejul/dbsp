@@ -25,4 +25,44 @@ public class Audiotext {
 	public Audiotext() {
 		
 	}
+
+	public Audiotext(String asin, String type, String language, String audioformat) {
+		this.asin = asin;
+		this.type = type;
+		this.language = language;
+		this.audioformat = audioformat;
+	}
+
+	public String getAsin() {
+		return asin;
+	}
+
+	public void setAsin(String asin) {
+		this.asin = asin;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+
+	public String getAudioformat() {
+		return audioformat;
+	}
+
+	public void setAudioformat(String audioformat) {
+		this.audioformat = audioformat;
+	}
+	
 }

@@ -19,4 +19,27 @@ public class SimProducts {
 	public SimProducts() {
 		
 	}
+
+	public SimProducts(String asin_original, String asin_similar) {
+		super();
+		this.asin_original = asin_original;
+		this.asin_similar = asin_similar;
+	}
+
+	public String getAsin_original() {
+		return asin_original;
+	}
+
+	public void setAsin_original(String asin_original) {
+		this.asin_original = asin_original;
+	}
+
+	public String getAsin_similar() {
+		return asin_similar;
+	}
+
+	public void setAsin_similar(String asin_similar) {
+		this.asin_similar = asin_similar;
+	}
+	
 }

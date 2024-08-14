@@ -18,4 +18,26 @@ public class ItemCategories {
 	public ItemCategories() {
 		
 	}
+
+	public ItemCategories(String asin, int categoryId) {
+		this.asin = asin;
+		this.categoryId = categoryId;
+	}
+
+	public String getAsin() {
+		return asin;
+	}
+
+	public void setAsin(String asin) {
+		this.asin = asin;
+	}
+
+	public int getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
+	
 }
