@@ -7,7 +7,8 @@ public class Main {
 		
 		//shit der in config muss
 		String host = "localhost";
-		String port = "5050";
+		//String port = "5050";
+		String port = "5432";
 		String db_name = "postgres";
 		String username = "postgres";
 		String password = "1234";
