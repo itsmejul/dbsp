@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CreateShopDemo",
+            "request": "launch",
+            "mainClass": "com.dbsp.CreateShopDemo",
+            "projectName": "first-db"
+        },
+        {
+            "type": "java",
+            "name": "TestJdbc",
+            "request": "launch",
+            "mainClass": "com.dbsp.TestJdbc",
+            "projectName": "first-db"
+        }
+    ]
+}
