@@ -2,33 +2,35 @@ package com.dbsp.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="item")
+@Table(name = "item")
 public class Item {
 
 	@Id
-	@Column(name="asin")
+	@Column(name = "asin")
 	private String asin;
-	@Column(name="title")
+	@Column(name = "title")
 	private String title;
-	@Column(name="pgroup")
+	@Column(name = "pgroup")
 	private String pgroup;
-	@Column(name="salesrank")
+	@Column(name = "salesrank")
 	private int salesrank;
-	@Column(name="avg_review_score")
+	@Column(name = "avg_review_score")
 	private double avg_review_score;
-	@Column(name="ean")
+	@Column(name = "ean")
 	private String ean;
-	@Column(name="picture")
+	@Column(name = "picture")
 	private String picture;
-	@Column(name="detailpage")
+	@Column(name = "detailpage")
 	private String detailpage;
-	
+
 	public Item() {
-		
+
 	}
 
 	public Item(String asin, String title, String pgroup, int salesrank, double avg_review_score, String ean,
@@ -106,5 +108,5 @@ public class Item {
 	public void setDetailpage(String detailpage) {
 		this.detailpage = detailpage;
 	}
-	
+
 }
