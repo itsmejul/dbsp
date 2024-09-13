@@ -14,6 +14,8 @@ import java.util.Properties;
 //import com.dbsp.entity.Shops;
 import com.dbsp.entity.*;
 
+import jakarta.persistence.TypedQuery;
+
 public class DBService implements AppInterface {
 
     private SessionFactory sessionFactory;
@@ -285,6 +287,61 @@ public class DBService implements AppInterface {
             session.close();
         }
     }
+
+    public List<Item> getTopProducts(int k){
+        //Items unter den Top k Ratings
+        Session session = null;
+        Transaction transaction = null;
+        List<Item> products = null;
+        try {
+            // Open a session and begin transaction
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            // HQL query to get the top k products ordered by avg_review_score in descending order
+            String hql = "FROM Item i ORDER BY i.avg_review_score DESC";
+            //das ist Hibernate Query Language HQL
+            TypedQuery<Item> query = session.createQuery(hql, Item.class);
+            query.setMaxResults(k);
+
+            // Execute the query and get the results
+            products = query.getResultList();
+
+            // Commit the transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (session != null && session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return products;
+    }
+
+    public List<Item> getSimilarCheaperProduct(String asin){
+
+    }
+
+    public void addNewReview(String asin){
+
+    }
+
+    public List<ProductReviews> showReviews(String asin){
+
+    }
+
+    public List<Customer>getTrolls(double averageRating){
+
+    }
+
+    public List<Price>getOffers(String asin){
+
+    }
+
 
     // Implementiere weitere Methoden hier, falls benötigt.
 }

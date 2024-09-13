@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "AppFrontend",
+            "request": "launch",
+            "mainClass": "com.dbsp.AppFrontend",
+            "projectName": "first-db"
+        },
+        {
+            "type": "java",
             "name": "CreateShopDemo",
             "request": "launch",
             "mainClass": "com.dbsp.CreateShopDemo",

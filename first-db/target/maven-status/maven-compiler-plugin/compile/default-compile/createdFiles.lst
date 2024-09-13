@@ -7,9 +7,11 @@ com\dbsp\entity\Musicspec.class
 com\dbsp\entity\Categories.class
 com\dbsp\entity\SimProducts.class
 com\dbsp\TestJdbc.class
+com\dbsp\DBService.class
 com\dbsp\entity\CustomerBuyItem.class
 com\dbsp\entity\Artist.class
 com\dbsp\entity\Item.class
+com\dbsp\AppInterface.class
 com\dbsp\entity\Audiotext.class
 com\dbsp\entity\Actor.class
 com\dbsp\entity\Creator.class
@@ -19,7 +21,9 @@ com\dbsp\entity\Publishers.class
 com\dbsp\entity\Author.class
 com\dbsp\entity\Dvdspec.class
 com\dbsp\entity\ProductReviews.class
+com\dbsp\AppFrontend.class
 com\dbsp\entity\Customer.class
 com\dbsp\entity\Price.class
 com\dbsp\CreateShopDemo.class
+com\dbsp\entity\ItemCategoryId.class
 com\dbsp\entity\Studios.class
