@@ -22,7 +22,8 @@ public interface AppInterface {
 
     List<Item> getSimilarCheaperProduct(String asin);
 
-    void addNewReview(String asin);
+    //unsicher wegen dem Review Ding!
+    void addNewReview(String asin, int rating, int helpful, String reviewDate, int customerId, String summary, String content);
     List<ProductReviews> showReviews(String asin);
 
     List<Customer>getTrolls(double averageRating);
