@@ -14,6 +14,8 @@ import java.util.Properties;
 //import com.dbsp.entity.Shops;
 import com.dbsp.entity.*;
 
+import jakarta.persistence.TypedQuery;
+
 public class DBService implements AppInterface {
 
     private SessionFactory sessionFactory;
@@ -45,10 +47,30 @@ public class DBService implements AppInterface {
 
             // Füge die Annotationen-Klasse hinzu
             // TODO alle Klassen hier die notwendig sind
-            configuration.addAnnotatedClass(Shops.class);
+            configuration.addAnnotatedClass(Actor.class);
+            configuration.addAnnotatedClass(Artist.class);
+            configuration.addAnnotatedClass(Audiotext.class);
+            configuration.addAnnotatedClass(Author.class);
+            configuration.addAnnotatedClass(Bookspec.class);
+            configuration.addAnnotatedClass(Categories.class);
+            configuration.addAnnotatedClass(Creator.class);
+            configuration.addAnnotatedClass(Customer.class);
+            configuration.addAnnotatedClass(CustomerBuyItem.class);
+            configuration.addAnnotatedClass(Director.class);
+            configuration.addAnnotatedClass(Dvdspec.class);
             configuration.addAnnotatedClass(Item.class);
             configuration.addAnnotatedClass(ItemCategories.class);
-            configuration.addAnnotatedClass(Categories.class);
+            configuration.addAnnotatedClass(ItemCategoryId.class);
+            configuration.addAnnotatedClass(Labels.class);
+            configuration.addAnnotatedClass(Lists.class);
+            configuration.addAnnotatedClass(Musicspec.class);
+            configuration.addAnnotatedClass(Price.class);
+            configuration.addAnnotatedClass(ProductReviews.class);
+            configuration.addAnnotatedClass(Publishers.class);
+            configuration.addAnnotatedClass(Shops.class);
+            configuration.addAnnotatedClass(SimProducts.class);
+            configuration.addAnnotatedClass(Studios.class);
+            configuration.addAnnotatedClass(Tracks.class);
             // Erstelle die SessionFactory
             sessionFactory = configuration.buildSessionFactory();
         } catch (Exception e) {
@@ -287,6 +309,223 @@ public class DBService implements AppInterface {
             session.close();
         }
     }
+
+    //ab hier noch nicht getestet, lg Simon
+    public List<Item> getTopProducts(int k){
+        //Items unter den Top k Ratings
+        Session session = null;
+        Transaction transaction = null;
+        List<Item> products = null;
+        try {
+            // Open a session and begin transaction
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            // HQL query to get the top k products ordered by avg_review_score in descending order
+            String hql = "FROM Item i ORDER BY i.avg_review_score DESC";
+            //das ist Hibernate Query Language HQL
+            TypedQuery<Item> query = session.createQuery(hql, Item.class);
+            query.setMaxResults(k);
+
+            // Execute the query and get the results
+            products = query.getResultList();
+
+            // Commit the transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (session != null && session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return products;
+    }
+
+    public List<Item> getSimilarCheaperProduct(String asin){
+        Session session = null;
+        Transaction transaction = null;
+        List<Item> cheaperSimilarItems = null;
+
+        try {
+            // Open session and begin transaction
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            // HQL query to get the price of the original product from the Price table
+            String originalProductPriceQuery = "SELECT p.price_value FROM Price p WHERE p.asin = :asin";
+            TypedQuery<Integer> originalProductPrice = session.createQuery(originalProductPriceQuery, Integer.class);
+            originalProductPrice.setParameter("asin", asin);
+            int originalPrice = originalProductPrice.getSingleResult();  // Get the original product price
+
+            // HQL query to get similar products that have a lower price than the original product
+            String hql = """
+                SELECT i FROM Item i 
+                WHERE i.asin IN (
+                    SELECT sp.asin_similar FROM SimProducts sp WHERE sp.asin_original = :asin
+                ) 
+                AND i.asin IN (
+                    SELECT p.asin FROM Price p WHERE p.price_value < :originalPrice
+                )
+            """;
+            TypedQuery<Item> query = session.createQuery(hql, Item.class);
+            query.setParameter("asin", asin);
+            query.setParameter("originalPrice", originalPrice);
+
+            // Execute the query and get the result list
+            cheaperSimilarItems = query.getResultList();
+
+            // Commit the transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        return cheaperSimilarItems;
+    }
+
+    public void addNewReview(String asin, int rating, int helpful, String reviewDate, int customerId, String summary, String content) {
+        Session session = null;
+        Transaction transaction = null;
+
+        try {
+            // Open session and begin transaction
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            // Create new ProductReviews object
+            ProductReviews newReview = new ProductReviews(asin, rating, helpful, reviewDate, customerId, summary, content);
+
+            // Save the review in the database
+            session.save(newReview);
+
+            // Commit transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
+    public List<ProductReviews> showReviews(String asin){
+        Session session = null;
+        Transaction transaction = null;
+        List<ProductReviews> reviews = null;
+
+        try {
+            // Open session and begin transaction
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            // HQL query to get all reviews for the given ASIN
+            String hql = "FROM ProductReviews r WHERE r.asin = :asin";
+            TypedQuery<ProductReviews> query = session.createQuery(hql, ProductReviews.class);
+            query.setParameter("asin", asin);
+
+            // Execute the query and get the result list
+            reviews = query.getResultList();
+
+            // Commit the transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        return reviews;
+    }
+
+    public List<Customer>getTrolls(double averageRating){
+        Session session = null;
+        Transaction transaction = null;
+        List<Customer> trolls = null;
+
+        try {
+            // Open session and begin transaction
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            // HQL query to find customers whose average rating is below the specified averageRating
+            String hql = "SELECT c FROM Customer c WHERE " +
+                         "(SELECT AVG(r.rating) FROM ProductReviews r WHERE r.customerId = c.id) < :averageRating";
+            TypedQuery<Customer> query = session.createQuery(hql, Customer.class);
+            query.setParameter("averageRating", averageRating);
+
+            // Execute the query and get the result list
+            trolls = query.getResultList();
+
+            // Commit the transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        return trolls;
+    }
+
+    public List<Price>getOffers(String asin){
+        Session session = null;
+        Transaction transaction = null;
+        List<Price> offers = null;
+
+        try {
+            // Open session and begin transaction
+            session = sessionFactory.openSession();
+            transaction = session.beginTransaction();
+
+            // HQL query to get all price offers for a given ASIN where price_value is greater than 0
+            String hql = "FROM Price p WHERE p.asin = :asin AND p.price_value > 0";
+            TypedQuery<Price> query = session.createQuery(hql, Price.class);
+            query.setParameter("asin", asin);
+
+            // Execute the query and get the result list
+            offers = query.getResultList();
+
+            // Commit the transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        return offers;
+    }
+
 
     // Implementiere weitere Methoden hier, falls benötigt.
 }
