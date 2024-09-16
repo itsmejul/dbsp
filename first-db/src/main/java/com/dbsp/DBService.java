@@ -171,8 +171,10 @@ public class DBService implements AppInterface {
                     // Handle root categories with parentId null
                     System.out.print(categoryName);
                     query = session.createQuery(
-                            "FROM Categories WHERE trim(title) = :title", Categories.class); // AND c.parentId IS
-                                                                                             // NULL
+                            "FROM Categories WHERE trim(title) = :title AND parentId IS NULL", Categories.class); // AND
+                                                                                                                  // c.parentId
+                                                                                                                  // IS
+                    // NULL
                 } else {
                     // Handle child categories with a specified parentId
                     query = session.createQuery(
