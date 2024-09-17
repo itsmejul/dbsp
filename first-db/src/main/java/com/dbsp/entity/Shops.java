@@ -15,31 +15,31 @@ public class Shops {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // Ensures Hibernate uses the auto-increment functionality
 	@Column(name = "shop_id")
-	private int id;
+	private Integer id;
 	@Column(name = "shop_name")
 	private String name;
 	@Column(name = "shop_street")
 	private String street;
 	@Column(name = "shop_zip")
-	private int zip;// PLZ
+	private Integer zip;// PLZ
 
 	public Shops() {
 
 	}
 
 	// rechtsklick source generate constructor with fields
-	public Shops(String name, String street, int zip) {
+	public Shops(String name, String street, Integer zip) {
 		this.name = name;
 		this.street = street;
 		this.zip = zip;
 	}
 
 	// rechtsklick source generate setters getters
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -59,11 +59,11 @@ public class Shops {
 		this.street = street;
 	}
 
-	public int getZip() {
+	public Integer getZip() {
 		return zip;
 	}
 
-	public void setZip(int zip) {
+	public void setZip(Integer zip) {
 		this.zip = zip;
 	}
 

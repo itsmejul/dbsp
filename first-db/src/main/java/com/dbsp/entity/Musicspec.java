@@ -11,7 +11,7 @@ public class Musicspec {
 
 	@Id
 	@Column(name="cd_id")
-	private int id;
+	private Integer id;
 	@Column(name="asin")
 	private String asin;
 	@Column(name="binding")
@@ -19,7 +19,7 @@ public class Musicspec {
 	@Column(name="format")
 	private String format;
 	@Column(name="num_discs")
-	private int num_discs;
+	private Integer num_discs;
 	@Column(name="releasedate")
 	private String releasedate;
 	@Column(name="upc")
@@ -29,7 +29,7 @@ public class Musicspec {
 		
 	}
 
-	public Musicspec(String asin, String binding, String format, int num_discs, String releasedate, String upc) {
+	public Musicspec(String asin, String binding, String format, Integer num_discs, String releasedate, String upc) {
 		this.asin = asin;
 		this.binding = binding;
 		this.format = format;
@@ -38,11 +38,11 @@ public class Musicspec {
 		this.upc = upc;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -70,11 +70,11 @@ public class Musicspec {
 		this.format = format;
 	}
 
-	public int getNum_discs() {
+	public Integer getNum_discs() {
 		return num_discs;
 	}
 
-	public void setNum_discs(int num_discs) {
+	public void setNum_discs(Integer num_discs) {
 		this.num_discs = num_discs;
 	}
 

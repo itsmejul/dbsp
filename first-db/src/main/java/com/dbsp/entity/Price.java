@@ -11,26 +11,26 @@ public class Price {
 
 	@Id
 	@Column(name="price_id")
-	private int id;
+	private Integer id;
 	@Column(name="asin")
 	private String asin;
 	@Column(name="price_state")
 	private String price_state;
 	@Column(name="price_mult")
-	private double price_mult;
+	private Double price_mult;
 	@Column(name="price_currency")
 	private String price_currency;
 	@Column(name="price_value")
-	private int price_value;
+	private Integer price_value;
 	@Column(name="price_shop_id")
-	private int price_shop_id;
+	private Integer price_shop_id;
 	
 	public Price() {
 		
 	}
 
-	public Price(String asin, String price_state, double price_mult, String price_currency, int price_value,
-			int price_shop_id) {
+	public Price(String asin, String price_state, Double price_mult, String price_currency, Integer price_value,
+			Integer price_shop_id) {
 		this.asin = asin;
 		this.price_state = price_state;
 		this.price_mult = price_mult;
@@ -39,11 +39,11 @@ public class Price {
 		this.price_shop_id = price_shop_id;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -63,11 +63,11 @@ public class Price {
 		this.price_state = price_state;
 	}
 
-	public double getPrice_mult() {
+	public Double getPrice_mult() {
 		return price_mult;
 	}
 
-	public void setPrice_mult(double price_mult) {
+	public void setPrice_mult(Double price_mult) {
 		this.price_mult = price_mult;
 	}
 
@@ -79,19 +79,19 @@ public class Price {
 		this.price_currency = price_currency;
 	}
 
-	public int getPrice_value() {
+	public Integer getPrice_value() {
 		return price_value;
 	}
 
-	public void setPrice_value(int price_value) {
+	public void setPrice_value(Integer price_value) {
 		this.price_value = price_value;
 	}
 
-	public int getPrice_shop_id() {
+	public Integer getPrice_shop_id() {
 		return price_shop_id;
 	}
 
-	public void setPrice_shop_id(int price_shop_id) {
+	public void setPrice_shop_id(Integer price_shop_id) {
 		this.price_shop_id = price_shop_id;
 	}
 	

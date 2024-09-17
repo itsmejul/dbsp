@@ -11,11 +11,11 @@ public class CustomerBuyItem {
 
 	@Id
 	@Column(name="customer_id")
-	private int id;
+	private Integer id;
 	@Column(name="asin")
 	private String asin;
 	@Column(name="price_id")
-	private int priceId;
+	private Integer priceId;
 	@Column(name="time_of_buy")
 	private String timeOfBuy;
 	
@@ -23,18 +23,18 @@ public class CustomerBuyItem {
 		
 	}
 
-	public CustomerBuyItem(int id, String asin, int priceId, String timeOfBuy) {
+	public CustomerBuyItem(Integer id, String asin, Integer priceId, String timeOfBuy) {
 		this.id = id;
 		this.asin = asin;
 		this.priceId = priceId;
 		this.timeOfBuy = timeOfBuy;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -46,11 +46,11 @@ public class CustomerBuyItem {
 		this.asin = asin;
 	}
 
-	public int getPriceId() {
+	public Integer getPriceId() {
 		return priceId;
 	}
 
-	public void setPriceId(int priceId) {
+	public void setPriceId(Integer priceId) {
 		this.priceId = priceId;
 	}
 

@@ -11,7 +11,7 @@ public class Bookspec {
 
 	@Id
 	@Column(name="book_id")
-	private int id;
+	private Integer id;
 	@Column(name="asin")
 	private String asin;
 	@Column(name="binding")
@@ -21,13 +21,13 @@ public class Bookspec {
 	@Column(name="isbn")
 	private String isbn;
 	@Column(name="package_weight")
-	private int weight;
+	private Integer weight;
 	@Column(name="package_height")
-	private int height;
+	private Integer height;
 	@Column(name="package_length")
-	private int length;
+	private Integer length;
 	@Column(name="pages")
-	private int pages;
+	private Integer pages;
 	@Column(name="publication_date")
 	private String date;
 	
@@ -35,8 +35,8 @@ public class Bookspec {
 		
 	}
 
-	public Bookspec(String asin, String binding, String edition, String isbn, int weight, int height, int length,
-			int pages, String date) {
+	public Bookspec(String asin, String binding, String edition, String isbn, Integer weight, Integer height, Integer length,
+			Integer pages, String date) {
 		this.asin = asin;
 		this.binding = binding;
 		this.edition = edition;
@@ -48,11 +48,11 @@ public class Bookspec {
 		this.date = date;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -88,35 +88,35 @@ public class Bookspec {
 		this.isbn = isbn;
 	}
 
-	public int getWeight() {
+	public Integer getWeight() {
 		return weight;
 	}
 
-	public void setWeight(int weight) {
+	public void setWeight(Integer weight) {
 		this.weight = weight;
 	}
 
-	public int getHeight() {
+	public Integer getHeight() {
 		return height;
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(Integer height) {
 		this.height = height;
 	}
 
-	public int getLength() {
+	public Integer getLength() {
 		return length;
 	}
 
-	public void setLength(int length) {
+	public void setLength(Integer length) {
 		this.length = length;
 	}
 
-	public int getPages() {
+	public Integer getPages() {
 		return pages;
 	}
 
-	public void setPages(int pages) {
+	public void setPages(Integer pages) {
 		this.pages = pages;
 	}
 

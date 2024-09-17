@@ -11,17 +11,17 @@ public class ProductReviews {
 
 	@Id
 	@Column(name="review_id")
-	private int id;
+	private Integer id;
 	@Column(name="asin")
 	private String asin;
 	@Column(name="rating")
-	private int rating;
+	private Integer rating;
 	@Column(name="helpful")
-	private int helpful;
+	private Integer helpful;
 	@Column(name="reviewdate")
 	private String reviewDate;
 	@Column(name="customer_id")
-	private int customerId;
+	private Integer customerId;
 	@Column(name="summary")
 	private String summary;
 	@Column(name="review_content")
@@ -31,7 +31,7 @@ public class ProductReviews {
 		
 	}
 
-	public ProductReviews(String asin, int rating, int helpful, String reviewDate, int customerId, String summary,
+	public ProductReviews(String asin, Integer rating, Integer helpful, String reviewDate, Integer customerId, String summary,
 			String content) {
 		this.asin = asin;
 		this.rating = rating;
@@ -42,11 +42,11 @@ public class ProductReviews {
 		this.content = content;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -58,19 +58,19 @@ public class ProductReviews {
 		this.asin = asin;
 	}
 
-	public int getRating() {
+	public Integer getRating() {
 		return rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(Integer rating) {
 		this.rating = rating;
 	}
 
-	public int getHelpful() {
+	public Integer getHelpful() {
 		return helpful;
 	}
 
-	public void setHelpful(int helpful) {
+	public void setHelpful(Integer helpful) {
 		this.helpful = helpful;
 	}
 
@@ -82,11 +82,11 @@ public class ProductReviews {
 		this.reviewDate = reviewDate;
 	}
 
-	public int getCustomerId() {
+	public Integer getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(int customerId) {
+	public void setCustomerId(Integer customerId) {
 		this.customerId = customerId;
 	}
 

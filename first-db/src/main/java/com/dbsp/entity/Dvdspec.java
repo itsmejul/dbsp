@@ -11,7 +11,7 @@ public class Dvdspec {
 
 	@Id
 	@Column(name="dvd_id")
-	private int id;
+	private Integer id;
 	@Column(name="asin")
 	private String asin;
 	@Column(name="aspectratio")
@@ -19,11 +19,11 @@ public class Dvdspec {
 	@Column(name="format")
 	private String format;
 	@Column(name="regioncode")
-	private int regioncode;
+	private Integer regioncode;
 	@Column(name="releasedate")
 	private String releasedate;
 	@Column(name="runningtime")
-	private int runningtime;
+	private Integer runningtime;
 	@Column(name="theatr_release")
 	private String theatr_release;
 	@Column(name="upc")
@@ -33,7 +33,7 @@ public class Dvdspec {
 		
 	}
 
-	public Dvdspec(String asin, String aspectratio, String format, int regioncode, String releasedate, int runningtime,
+	public Dvdspec(String asin, String aspectratio, String format, Integer regioncode, String releasedate, Integer runningtime,
 			String theatr_release, String upc) {
 		this.asin = asin;
 		this.aspectratio = aspectratio;
@@ -45,11 +45,11 @@ public class Dvdspec {
 		this.upc = upc;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -77,11 +77,11 @@ public class Dvdspec {
 		this.format = format;
 	}
 
-	public int getRegioncode() {
+	public Integer getRegioncode() {
 		return regioncode;
 	}
 
-	public void setRegioncode(int regioncode) {
+	public void setRegioncode(Integer regioncode) {
 		this.regioncode = regioncode;
 	}
 
@@ -93,11 +93,11 @@ public class Dvdspec {
 		this.releasedate = releasedate;
 	}
 
-	public int getRunningtime() {
+	public Integer getRunningtime() {
 		return runningtime;
 	}
 
-	public void setRunningtime(int runningtime) {
+	public void setRunningtime(Integer runningtime) {
 		this.runningtime = runningtime;
 	}
 

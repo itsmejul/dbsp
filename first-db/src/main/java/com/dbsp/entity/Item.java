@@ -2,8 +2,6 @@ package com.dbsp.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -19,9 +17,9 @@ public class Item {
 	@Column(name = "pgroup")
 	private String pgroup;
 	@Column(name = "salesrank")
-	private int salesrank;
+	private Integer salesrank;
 	@Column(name = "avg_review_score")
-	private double avg_review_score;
+	private Double avg_review_score;
 	@Column(name = "ean")
 	private String ean;
 	@Column(name = "picture")
@@ -33,7 +31,7 @@ public class Item {
 
 	}
 
-	public Item(String asin, String title, String pgroup, int salesrank, double avg_review_score, String ean,
+	public Item(String asin, String title, String pgroup, Integer salesrank, Double avg_review_score, String ean,
 			String picture, String detailpage) {
 		this.asin = asin;
 		this.title = title;
@@ -69,19 +67,19 @@ public class Item {
 		this.pgroup = pgroup;
 	}
 
-	public int getSalesrank() {
+	public Integer getSalesrank() {
 		return salesrank;
 	}
 
-	public void setSalesrank(int salesrank) {
+	public void setSalesrank(Integer salesrank) {
 		this.salesrank = salesrank;
 	}
 
-	public double getAvg_review_score() {
+	public Double getAvg_review_score() {
 		return avg_review_score;
 	}
 
-	public void setAvg_review_score(double avg_review_score) {
+	public void setAvg_review_score(Double avg_review_score) {
 		this.avg_review_score = avg_review_score;
 	}
 

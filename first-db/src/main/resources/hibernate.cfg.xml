@@ -22,8 +22,29 @@
         <property name="show_sql">true</property>
 
 
-
-       <mapping class="com.dbsp.entity.Shops"/>
+        <mapping class="com.dbsp.entity.Actor"/>
+        <mapping class="com.dbsp.entity.Artist"/>
+        <mapping class="com.dbsp.entity.Author"/>
+        <mapping class="com.dbsp.entity.Bookspec"/>
+        <mapping class="com.dbsp.entity.Categories"/>
+        <mapping class="com.dbsp.entity.Creator"/>
+        <mapping class="com.dbsp.entity.Customer"/>
+        <mapping class="com.dbsp.entity.CustomerBuyItem"/>
+        <mapping class="com.dbsp.entity.Director"/>
+        <mapping class="com.dbsp.entity.Dvdspec"/>
+        <mapping class="com.dbsp.entity.Item"/>
+        <mapping class="com.dbsp.entity.ItemCategories"/>
+        <mapping class="com.dbsp.entity.ItemCategoryId"/>
+        <mapping class="com.dbsp.entity.Labels"/>
+        <mapping class="com.dbsp.entity.Lists"/>
+        <mapping class="com.dbsp.entity.Musicspec"/>
+        <mapping class="com.dbsp.entity.Price"/>
+        <mapping class="com.dbsp.entity.ProductReviews"/>
+        <mapping class="com.dbsp.entity.Publishers"/>
+        <mapping class="com.dbsp.entity.Shops"/>
+        <mapping class="com.dbsp.entity.SimProducts"/>
+        <mapping class="com.dbsp.entity.Studios"/>
+        <mapping class="com.dbsp.entity.Tracks"/>
 
     </session-factory>
 </hibernate-configuration>
