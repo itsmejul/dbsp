@@ -7,6 +7,11 @@ import com.dbsp.entity.Customer;
 import com.dbsp.entity.Item;
 import com.dbsp.entity.Price;
 import com.dbsp.entity.ProductReviews;
+import static com.dbsp.extra.Colors.COLOR_CYAN;
+import static com.dbsp.extra.Colors.COLOR_GREEN_BACKGROUND;
+import static com.dbsp.extra.Colors.COLOR_RED;
+import static com.dbsp.extra.Colors.COLOR_RESET;
+import com.dbsp.extra.InputCheck;
 
 public class AppFrontend {
 
@@ -29,20 +34,19 @@ public class AppFrontend {
         DBService dbService = new DBService();
         dbService.init(); // Initialisierung des Services mit Properties
 
-        System.out.println("Shop Management System");
-        System.out.println("0. Exit");
-        System.out.println("1. Add a new shop");
-        System.out.println("2. GetProduct");
-        System.out.println("3. getProducts");
-        System.out.println("4. getProductsByCategoryPath");
-        System.out.println("5. getTopProducts");
-        System.out.println("6. getSimilarCheaperProduct");
-        System.out.println("7. addNewReview");
-        System.out.println("8. showReviews");
-        System.out.println("9. getTrolls");
-        System.out.println("10. getOffers");
-
         while (true) {
+            System.out.println(COLOR_GREEN_BACKGROUND + " Shop Management System " + COLOR_RESET);
+            System.out.println(COLOR_CYAN + "0" + COLOR_RESET + ". Exit");
+            System.out.println(COLOR_CYAN + "1" + COLOR_RESET + ". GetProduct");
+            System.out.println(COLOR_CYAN + "2" + COLOR_RESET + ". getProducts");
+            System.out.println(COLOR_CYAN + "3" + COLOR_RESET + ". getProductsByCategoryPath");
+            System.out.println(COLOR_CYAN + "4" + COLOR_RESET + ". getTopProducts");
+            System.out.println(COLOR_CYAN + "5" + COLOR_RESET + ". getSimilarCheaperProduct");
+            System.out.println(COLOR_CYAN + "6" + COLOR_RESET + ". addNewReview");
+            System.out.println(COLOR_CYAN + "7" + COLOR_RESET + ". showReviews");
+            System.out.println(COLOR_CYAN + "8" + COLOR_RESET + ". getTrolls");
+            System.out.println(COLOR_CYAN + "9" + COLOR_RESET + ". getOffers");
+            System.out.println(COLOR_CYAN + "11" + COLOR_RESET + ". Add a new shop");
             System.out.print("Enter your choice: ");
             if (scanner.hasNextInt()) {
                 int choice = scanner.nextInt();
@@ -58,23 +62,16 @@ public class AppFrontend {
                         System.exit(0);
                         break;
                     }
-                    case 1: {
-                        System.out.print("Enter shop name: ");
-                        String name = scanner.nextLine();
-                        System.out.print("Enter shop street: ");
-                        String street = scanner.nextLine();
-                        System.out.print("Enter shop zip code: ");
-                        int zip = scanner.nextInt();
-
-                        dbService.addShop(name, street, zip);
-                        System.out.println("Shop added successfully.");
-                        break;
-                    }
 
                     //Item getProduct(String asin);
-                    case 2: {
-                        System.out.print("Enter asin: ");
-                        String asin = scanner.nextLine();
+                    case 1: {
+                        String asin = null;
+                        //check asin
+                        while (!InputCheck.asinCheck(asin)) { 
+                            System.out.print("Enter asin: ");
+                            asin = scanner.nextLine();
+                        }
+                        //dann weiter mit der asin
                         Item product = dbService.getProduct(asin);
 
                         if (product != null) {
@@ -86,12 +83,15 @@ public class AppFrontend {
                         } else {
                             System.out.println("No product found with ASIN: " + asin);
                         }
+                        break;
                     }
 
                     //List<Item> getProducts(String pattern);
-                    case 3: {
+                    case 2: {
                         System.out.print("Enter title pattern:");
                         String pattern = scanner.nextLine();
+                        //sonderzeichen checken
+                        //dann weiter mit pattern
                         List<Item> products = dbService.getProducts(pattern);
                         if (products != null && !products.isEmpty()) {
                             System.out.println("Products matching the pattern:");
@@ -101,14 +101,16 @@ public class AppFrontend {
                         } else {
                             System.out.println("No products found matching the pattern: " + pattern);
                         }
+                        break;
                     }
 
                     //List<Item> getProductsByCategoryPath(String categoryPath);
-                    case 4: {
+                    case 3: {
                         dbService.printAllCategoryTitles();
                         System.out.print("Enter Category Path like this: Category1 > Category2 > Category 3");
                         String categoryPath = scanner.nextLine();
-
+                        //check
+                        //
                         List<Item> products = dbService.getProductsByCategoryPath(categoryPath);
 
                         if (products != null && !products.isEmpty()) {
@@ -119,12 +121,15 @@ public class AppFrontend {
                         } else {
                             System.out.println("No products found in the given category path: " + categoryPath);
                         }
+                        break;
                     }
 
                     //List<Item> getTopProducts(int k);
-                    case 5: {
+                    case 4: {
                         System.out.println("Enter amount of top products:");
                         int k = scanner.nextInt();
+                        //nextInt eigtl safe
+                        //
                         List<Item> topProducts = dbService.getTopProducts(k);
                         if (topProducts != null && !topProducts.isEmpty()) {
                             System.out.println("Top " + k + " products:");
@@ -134,12 +139,18 @@ public class AppFrontend {
                         } else {
                             System.out.println("No top products found.");
                         }
+                        break;
                     }
 
                     //List<Item> getSimilarCheaperProduct(String asin);
-                    case 6: {
-                        System.out.println("Enter asin:");
-                        String asin = scanner.nextLine();
+                    case 5: {
+                        String asin = null;
+                        //check asin
+                        while (!InputCheck.asinCheck(asin)) { 
+                            System.out.print("Enter asin: ");
+                            asin = scanner.nextLine();
+                        }
+                        //dann weiter mit der asin
                         List<Item> similarProducts = dbService.getSimilarCheaperProduct(asin);
                         if (similarProducts != null && !similarProducts.isEmpty()) {
                             System.out.println("Similar products:");
@@ -149,12 +160,17 @@ public class AppFrontend {
                         } else {
                             System.out.println("No similar products found.");
                         }
+                        break;
                     }
 
                     //void addNewReview(String asin, int rating, int helpful, String reviewDate, int customerId, String summary, String content);
-                    case 7: {
-                        System.out.println("Enter asin:");
-                        String asin = scanner.nextLine();
+                    case 6: {
+                        //check alles
+                        String asin = null;
+                        while (!InputCheck.asinCheck(asin)) { 
+                            System.out.print("Enter asin: ");
+                            asin = scanner.nextLine();
+                        }
                         System.out.println("Enter rating:");
                         int rating = scanner.nextInt();
                         scanner.nextLine();
@@ -172,34 +188,42 @@ public class AppFrontend {
                         String content = scanner.nextLine();
                         dbService.addNewReview(asin, rating, helpful, reviewDate, customerId, summary, content);
                         System.out.println("Review added successfully.");
+                        break;
                     }
 
                     //List<ProductReviews> showReviews(String asin);
-                    case 8: {
-                        System.out.println("Enter asin:");
-                        String asin = scanner.nextLine();
+                    case 7: {
+                        String asin = null;
+                        //check asin
+                        while (!InputCheck.asinCheck(asin)) { 
+                            System.out.print("Enter asin: ");
+                            asin = scanner.nextLine();
+                        }
+                        //dann weiter mit der asin
                         List<ProductReviews> reviews = dbService.showReviews(asin);
                         if (reviews != null && !reviews.isEmpty()) {
                             System.out.println("Reviews for " + asin + ":");
                             for (ProductReviews review : reviews) {
+                                System.out.println(COLOR_CYAN + "-----------------------------------------------" + COLOR_RESET);
                                 System.out.println("Rating: " + review.getRating());
                                 System.out.println("Helpful: " + review.getHelpful());
                                 System.out.println("Review Date: " + review.getReviewDate());
                                 System.out.println("Customer ID: " + review.getCustomerId());
                                 System.out.println("Summary: " + review.getSummary());
                                 System.out.println("Content: " + review.getContent());
-                                System.out.println("-----------------------------------------------");
                             }
                         } else {
                             System.out.println("No reviews found for " + asin);
                         }
+                        break;
                     }
 
                     //List<Customer>getTrolls(double averageRating);
-                    case 9: {
+                    case 8: {
                         System.out.println("Enter average rating:");
                         double averageRating = scanner.nextDouble();
                         scanner.nextLine();
+                        //check between 1 & 5
                         List<Customer> trolls = dbService.getTrolls(averageRating);
                         if (trolls != null && !trolls.isEmpty()) {
                             System.out.println("Trolls with average rating of " + averageRating + ":");
@@ -212,12 +236,18 @@ public class AppFrontend {
                         } else {
                             System.out.println("No trolls found with average rating of " + averageRating);
                         }
+                        break;
                     }
 
                     //List<Price>getOffers(String asin);
-                    case 10: {
-                        System.out.println("Enter asin:");
-                        String asin = scanner.nextLine();
+                    case 9: {
+                        String asin = null;
+                        //check asin
+                        while (!InputCheck.asinCheck(asin)) { 
+                            System.out.print("Enter asin: ");
+                            asin = scanner.nextLine();
+                        }
+                        //dann weiter mit der asin
                         List<Price> offers = dbService.getOffers(asin);
                         if (offers != null && !offers.isEmpty()) {
                             System.out.println("Offers for " + asin + ":");
@@ -229,17 +259,32 @@ public class AppFrontend {
                         } else {
                             System.out.println("No offers found for " + asin);
                         }
+                        break;
                     }
-                    /*
-                     * default:
-                     * System.out.println("Invalid choice. Please try again.");
-                     * break;
-                     */
+                    
+                    //extra ...
+                    case 11: {
+                        System.out.print("Enter shop name: ");
+                        String name = scanner.nextLine();
+                        System.out.print("Enter shop street: ");
+                        String street = scanner.nextLine();
+                        System.out.print("Enter shop zip code: ");
+                        int zip = scanner.nextInt();
+
+                        dbService.addShop(name, street, zip);
+                        System.out.println("Shop added successfully.");
+                        break;
+                    }
+                    
+                     default:
+                     System.out.println(COLOR_RED + "This choice doesn't exist (yet). Please try again." + COLOR_RESET);
+                     break;
+                    
                 }
 
             } else {
                 // Handle non-integer input
-                System.out.println("Invalid input. Please enter a valid number.");
+                System.out.println(COLOR_RED + "Invalid input. Please enter a valid number." + COLOR_RESET);
                 scanner.nextLine(); // Clear the invalid input
             }
         }
