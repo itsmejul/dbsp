@@ -195,8 +195,6 @@ public class DBService implements AppInterface {
         return products;
     }
 
-
-
     public Category getCategoryTree() {
         Session session = null;
         List<Categories> categoriesList = null;
@@ -263,14 +261,6 @@ public class DBService implements AppInterface {
         return topCategory;
     }
 
-
-
-
-
-
-
-
-
     public List<Item> getProductsByCategoryPath(String categoryPath) {
         Session session = null;
         List<Item> items = new ArrayList<>();
@@ -287,7 +277,7 @@ public class DBService implements AppInterface {
             Categories targetCategory = findCategoryByPath(session, categoryNames);
             if (targetCategory == null) {
                 System.out.println("Category not found for the given path: " + categoryPath);
-                return items;  // Return empty list if category is not found
+                return items; // Return empty list if category is not found
             }
 
             // Step 3: Retrieve the item ASINs for the found category
@@ -353,99 +343,96 @@ public class DBService implements AppInterface {
         return parentCategory;
     }
 
-
-
-
-
-
-
-
-
-
-/*
-    // Fetches products by category path
-    public List<Item> getProductsByCategoryPath(String categoryPath) { 
-        Session session = null;
-        List<Item> products = null;
-        try {
-            // Open a session
-            session = sessionFactory.openSession();
-            session.beginTransaction();
-
-            // Split the category path into parts
-            String[] categoryNames = categoryPath.split(">");
-            Integer parentId = null; // Starting with root category parent ID, assumed to be 0 or NULL
-
-            // Iterate over the category path parts to find the category ID
-            Integer finalCategoryId = null;
-            for (String categoryName : categoryNames) {
-                categoryName = categoryName.trim(); // Remove any leading/trailing whitespace
-
-                // Use HQL to find the category with the given name and parent ID
-                Query<Categories> query;
-                if (parentId == null) {
-                    // Handle root categories with parentId null
-                    System.out.print(categoryName);
-                    query = session.createQuery(
-                            "FROM Categories WHERE trim(title) = :title AND parentId IS NULL", Categories.class); // AND
-                                                                                                                  // c.parentId
-                                                                                                                  // IS
-                    // NULL
-                } else {
-                    // Handle child categories with a specified parentId
-                    query = session.createQuery(
-                            "FROM Categories c WHERE c.title = :title AND c.parentId = :parentId", Categories.class);
-                    query.setParameter("parentId", parentId);
-                }
-                query.setParameter("title", categoryName);
-
-                List<Categories> categories = query.getResultList();
-
-                if (categories.isEmpty()) {
-                    System.out.println("Category not found: " + categoryName);
-                    return null; // Return null if any category in the path is not found
-                } else {
-                    System.out.println("found");
-                }
-
-                Categories category = categories.get(0);
-                finalCategoryId = category.getId();
-                parentId = finalCategoryId; // Set parentId to the current category's ID for the next iteration
-            }
-
-            // Now, finalCategoryId should contain the ID of the last category in the path
-            if (finalCategoryId != null) {
-                // Query to find all items linked to this category
-                Query<Item> itemQuery = session.createQuery(
-                        "SELECT i FROM Item i JOIN ItemCategories ic ON i.asin = ic.asin WHERE ic.categoryId = :categoryId",
-                        Item.class);
-                itemQuery.setParameter("categoryId", finalCategoryId);
-
-                products = itemQuery.getResultList();
-            }
-
-            session.getTransaction().commit();
-
-        } catch (Exception e) {
-            if (session != null && session.getTransaction().isActive()) {
-                session.getTransaction().rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-        return products;
-    }
-
+    /*
+     * // Fetches products by category path
+     * public List<Item> getProductsByCategoryPath(String categoryPath) {
+     * Session session = null;
+     * List<Item> products = null;
+     * try {
+     * // Open a session
+     * session = sessionFactory.openSession();
+     * session.beginTransaction();
+     * 
+     * // Split the category path into parts
+     * String[] categoryNames = categoryPath.split(">");
+     * Integer parentId = null; // Starting with root category parent ID, assumed to
+     * be 0 or NULL
+     * 
+     * // Iterate over the category path parts to find the category ID
+     * Integer finalCategoryId = null;
+     * for (String categoryName : categoryNames) {
+     * categoryName = categoryName.trim(); // Remove any leading/trailing whitespace
+     * 
+     * // Use HQL to find the category with the given name and parent ID
+     * Query<Categories> query;
+     * if (parentId == null) {
+     * // Handle root categories with parentId null
+     * System.out.print(categoryName);
+     * query = session.createQuery(
+     * "FROM Categories WHERE trim(title) = :title AND parentId IS NULL",
+     * Categories.class); // AND
+     * // c.parentId
+     * // IS
+     * // NULL
+     * } else {
+     * // Handle child categories with a specified parentId
+     * query = session.createQuery(
+     * "FROM Categories c WHERE c.title = :title AND c.parentId = :parentId",
+     * Categories.class);
+     * query.setParameter("parentId", parentId);
+     * }
+     * query.setParameter("title", categoryName);
+     * 
+     * List<Categories> categories = query.getResultList();
+     * 
+     * if (categories.isEmpty()) {
+     * System.out.println("Category not found: " + categoryName);
+     * return null; // Return null if any category in the path is not found
+     * } else {
+     * System.out.println("found");
+     * }
+     * 
+     * Categories category = categories.get(0);
+     * finalCategoryId = category.getId();
+     * parentId = finalCategoryId; // Set parentId to the current category's ID for
+     * the next iteration
+     * }
+     * 
+     * // Now, finalCategoryId should contain the ID of the last category in the
+     * path
+     * if (finalCategoryId != null) {
+     * // Query to find all items linked to this category
+     * Query<Item> itemQuery = session.createQuery(
+     * "SELECT i FROM Item i JOIN ItemCategories ic ON i.asin = ic.asin WHERE ic.categoryId = :categoryId"
+     * ,
+     * Item.class);
+     * itemQuery.setParameter("categoryId", finalCategoryId);
+     * 
+     * products = itemQuery.getResultList();
+     * }
+     * 
+     * session.getTransaction().commit();
+     * 
+     * } catch (Exception e) {
+     * if (session != null && session.getTransaction().isActive()) {
+     * session.getTransaction().rollback();
+     * }
+     * e.printStackTrace();
+     * } finally {
+     * if (session != null) {
+     * session.close();
+     * }
+     * }
+     * return products;
+     * }
+     */
     public void printAllCategoryTitles() {
         Session session = null;
         try {
             // Open a session
             session = sessionFactory.openSession();
             session.beginTransaction();
-            String title = "Features";
+            String title = "Alle SACDs";
 
             // Use HQL to retrieve all categories
             Query<Categories> query = session.createQuery("FROM Categories WHERE trim(title) = :title",
@@ -479,7 +466,7 @@ public class DBService implements AppInterface {
             }
         }
     }
-*/
+
     @Override
     public void addShop(String name, String street, int zip) {
         if (sessionFactory == null) {
@@ -504,9 +491,9 @@ public class DBService implements AppInterface {
         }
     }
 
-    //ab hier noch nicht getestet, lg Simon
-    public List<Item> getTopProducts(int k){
-        //Items unter den Top k Ratings
+    // ab hier noch nicht getestet, lg Simon
+    public List<Item> getTopProducts(int k) {
+        // Items unter den Top k Ratings
         Session session = null;
         Transaction transaction = null;
         List<Item> products = null;
@@ -515,9 +502,10 @@ public class DBService implements AppInterface {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
 
-            // HQL query to get the top k products ordered by avg_review_score in descending order
+            // HQL query to get the top k products ordered by avg_review_score in descending
+            // order
             String hql = "FROM Item i ORDER BY i.avg_review_score DESC";
-            //das ist Hibernate Query Language HQL
+            // das ist Hibernate Query Language HQL
             TypedQuery<Item> query = session.createQuery(hql, Item.class);
             query.setMaxResults(k);
 
@@ -539,7 +527,7 @@ public class DBService implements AppInterface {
         return products;
     }
 
-    public List<Item> getSimilarCheaperProduct(String asin){
+    public List<Item> getSimilarCheaperProduct(String asin) {
         Session session = null;
         Transaction transaction = null;
         List<Item> cheaperSimilarItems = null;
@@ -553,18 +541,19 @@ public class DBService implements AppInterface {
             String originalProductPriceQuery = "SELECT p.price_value FROM Price p WHERE p.asin = :asin";
             TypedQuery<Integer> originalProductPrice = session.createQuery(originalProductPriceQuery, Integer.class);
             originalProductPrice.setParameter("asin", asin);
-            int originalPrice = originalProductPrice.getSingleResult();  // Get the original product price
+            int originalPrice = originalProductPrice.getSingleResult(); // Get the original product price
 
-            // HQL query to get similar products that have a lower price than the original product
+            // HQL query to get similar products that have a lower price than the original
+            // product
             String hql = """
-                SELECT i FROM Item i 
-                WHERE i.asin IN (
-                    SELECT sp.asin_similar FROM SimProducts sp WHERE sp.asin_original = :asin
-                ) 
-                AND i.asin IN (
-                    SELECT p.asin FROM Price p WHERE p.price_value < :originalPrice
-                )
-            """;
+                        SELECT i FROM Item i
+                        WHERE i.asin IN (
+                            SELECT sp.asin_similar FROM SimProducts sp WHERE sp.asin_original = :asin
+                        )
+                        AND i.asin IN (
+                            SELECT p.asin FROM Price p WHERE p.price_value < :originalPrice
+                        )
+                    """;
             TypedQuery<Item> query = session.createQuery(hql, Item.class);
             query.setParameter("asin", asin);
             query.setParameter("originalPrice", originalPrice);
@@ -588,7 +577,8 @@ public class DBService implements AppInterface {
         return cheaperSimilarItems;
     }
 
-    public void addNewReview(String asin, Integer rating, Integer helpful, String reviewDate, Integer customerId, String summary, String content) {
+    public void addNewReview(String asin, Integer rating, Integer helpful, String reviewDate, Integer customerId,
+            String summary, String content) {
         Session session = null;
         Transaction transaction = null;
 
@@ -598,7 +588,8 @@ public class DBService implements AppInterface {
             transaction = session.beginTransaction();
 
             // Create new ProductReviews object
-            ProductReviews newReview = new ProductReviews(asin, rating, helpful, reviewDate, customerId, summary, content);
+            ProductReviews newReview = new ProductReviews(asin, rating, helpful, reviewDate, customerId, summary,
+                    content);
 
             // Save the review in the database
             session.save(newReview);
@@ -617,7 +608,7 @@ public class DBService implements AppInterface {
         }
     }
 
-    public List<ProductReviews> showReviews(String asin){
+    public List<ProductReviews> showReviews(String asin) {
         Session session = null;
         Transaction transaction = null;
         List<ProductReviews> reviews = null;
@@ -651,7 +642,7 @@ public class DBService implements AppInterface {
         return reviews;
     }
 
-    public List<Customer>getTrolls(double averageRating){
+    public List<Customer> getTrolls(double averageRating) {
         Session session = null;
         Transaction transaction = null;
         List<Customer> trolls = null;
@@ -661,9 +652,10 @@ public class DBService implements AppInterface {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
 
-            // HQL query to find customers whose average rating is below the specified averageRating
+            // HQL query to find customers whose average rating is below the specified
+            // averageRating
             String hql = "SELECT c FROM Customer c WHERE " +
-                         "(SELECT AVG(r.rating) FROM ProductReviews r WHERE r.customerId = c.id) < :averageRating";
+                    "(SELECT AVG(r.rating) FROM ProductReviews r WHERE r.customerId = c.id) < :averageRating";
             TypedQuery<Customer> query = session.createQuery(hql, Customer.class);
             query.setParameter("averageRating", averageRating);
 
@@ -686,7 +678,7 @@ public class DBService implements AppInterface {
         return trolls;
     }
 
-    public List<Price>getOffers(String asin){
+    public List<Price> getOffers(String asin) {
         Session session = null;
         Transaction transaction = null;
         List<Price> offers = null;
@@ -696,7 +688,8 @@ public class DBService implements AppInterface {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
 
-            // HQL query to get all price offers for a given ASIN where price_value is greater than 0
+            // HQL query to get all price offers for a given ASIN where price_value is
+            // greater than 0
             String hql = "FROM Price p WHERE p.asin = :asin AND p.price_value > 0";
             TypedQuery<Price> query = session.createQuery(hql, Price.class);
             query.setParameter("asin", asin);
@@ -719,7 +712,6 @@ public class DBService implements AppInterface {
 
         return offers;
     }
-
 
     // Implementiere weitere Methoden hier, falls benötigt.
 }
