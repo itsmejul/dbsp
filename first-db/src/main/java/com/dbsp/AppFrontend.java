@@ -7,6 +7,7 @@ import com.dbsp.entity.Customer;
 import com.dbsp.entity.Item;
 import com.dbsp.entity.Price;
 import com.dbsp.entity.ProductReviews;
+import com.dbsp.extra.Category;
 import static com.dbsp.extra.Colors.COLOR_CYAN;
 import static com.dbsp.extra.Colors.COLOR_GREEN_BACKGROUND;
 import static com.dbsp.extra.Colors.COLOR_RED;
@@ -46,6 +47,7 @@ public class AppFrontend {
             System.out.println(COLOR_CYAN + "7" + COLOR_RESET + ". showReviews");
             System.out.println(COLOR_CYAN + "8" + COLOR_RESET + ". getTrolls");
             System.out.println(COLOR_CYAN + "9" + COLOR_RESET + ". getOffers");
+            System.out.println(COLOR_CYAN + "10" + COLOR_RESET + ". GetCategoryTree");
             System.out.println(COLOR_CYAN + "11" + COLOR_RESET + ". Add a new shop");
             System.out.print("Enter your choice: ");
             if (scanner.hasNextInt()) {
@@ -66,12 +68,10 @@ public class AppFrontend {
                     //Item getProduct(String asin);
                     case 1: {
                         String asin = null;
-                        //check asin
                         while (!InputCheck.asinCheck(asin)) { 
                             System.out.print("Enter asin: ");
                             asin = scanner.nextLine();
                         }
-                        //dann weiter mit der asin
                         Item product = dbService.getProduct(asin);
 
                         if (product != null) {
@@ -88,10 +88,11 @@ public class AppFrontend {
 
                     //List<Item> getProducts(String pattern);
                     case 2: {
-                        System.out.print("Enter title pattern:");
-                        String pattern = scanner.nextLine();
-                        //sonderzeichen checken
-                        //dann weiter mit pattern
+                        String pattern = null;
+                        while (!InputCheck.patternCheck(pattern)) { 
+                            System.out.print("Enter title pattern:");
+                            pattern = scanner.nextLine();
+                        }
                         List<Item> products = dbService.getProducts(pattern);
                         if (products != null && !products.isEmpty()) {
                             System.out.println("Products matching the pattern:");
@@ -106,38 +107,50 @@ public class AppFrontend {
 
                     //List<Item> getProductsByCategoryPath(String categoryPath);
                     case 3: {
-                        dbService.printAllCategoryTitles();
-                        System.out.print("Enter Category Path like this: Category1 > Category2 > Category 3");
-                        String categoryPath = scanner.nextLine();
-                        //check
-                        //
-                        List<Item> products = dbService.getProductsByCategoryPath(categoryPath);
+                        
 
-                        if (products != null && !products.isEmpty()) {
-                            System.out.println("Products in category path:");
-                            for (Item product : products) {
-                                System.out.println("ASIN: " + product.getAsin() + ", Title: " + product.getTitle());
-                            }
+                        // Step 1: Prompt the user to enter a category path
+                        System.out.println("Please enter the category path (e.g., 'CDs>1980s CDs>ABBA'):");
+                        String categoryPath = scanner.nextLine();
+                
+                        // Step 2: Fetch items based on the category path
+                        List<Item> items = dbService.getProductsByCategoryPath(categoryPath);
+                
+                        // Step 3: Print item titles to the console
+                        if (items.isEmpty()) {
+                            System.out.println("No items found for the given category path.");
                         } else {
-                            System.out.println("No products found in the given category path: " + categoryPath);
+                            System.out.println("Items found in category '" + categoryPath + "':");
+                            for (Item item : items) {
+                                System.out.println(item.getTitle());
+                            }
                         }
+                
+                        scanner.close();
+                
                         break;
                     }
 
                     //List<Item> getTopProducts(int k);
                     case 4: {
                         System.out.println("Enter amount of top products:");
-                        int k = scanner.nextInt();
-                        //nextInt eigtl safe
-                        //
-                        List<Item> topProducts = dbService.getTopProducts(k);
-                        if (topProducts != null && !topProducts.isEmpty()) {
-                            System.out.println("Top " + k + " products:");
-                            for (Item product : topProducts) {
-                                System.out.println("ASIN: " + product.getAsin() + ", Title: " + product.getTitle());
+                        if(scanner.hasNextInt()){
+                            int k = scanner.nextInt();
+                            //nextInt eigtl (nicht) safe
+                            //
+                            List<Item> topProducts = dbService.getTopProducts(k);
+                            if (topProducts != null && !topProducts.isEmpty()) {
+                                System.out.println("Top " + k + " products:");
+                                for (Item product : topProducts) {
+                                    System.out.println("ASIN: " + product.getAsin() + ", Title: " + product.getTitle());
+                                }
+                            } else {
+                                System.out.println("No top products found.");
                             }
-                        } else {
-                            System.out.println("No top products found.");
+                        }   else {
+                            // Handle non-integer input
+                            System.out.println(COLOR_RED + "Invalid input. Please enter a valid number." + COLOR_RESET);
+                            scanner.nextLine(); // Clear the invalid input
                         }
                         break;
                     }
@@ -145,12 +158,10 @@ public class AppFrontend {
                     //List<Item> getSimilarCheaperProduct(String asin);
                     case 5: {
                         String asin = null;
-                        //check asin
                         while (!InputCheck.asinCheck(asin)) { 
                             System.out.print("Enter asin: ");
                             asin = scanner.nextLine();
                         }
-                        //dann weiter mit der asin
                         List<Item> similarProducts = dbService.getSimilarCheaperProduct(asin);
                         if (similarProducts != null && !similarProducts.isEmpty()) {
                             System.out.println("Similar products:");
@@ -168,24 +179,60 @@ public class AppFrontend {
                         //check alles
                         String asin = null;
                         while (!InputCheck.asinCheck(asin)) { 
-                            System.out.print("Enter asin: ");
+                            System.out.println("Enter asin: ");
                             asin = scanner.nextLine();
                         }
-                        System.out.println("Enter rating:");
-                        int rating = scanner.nextInt();
-                        scanner.nextLine();
-                        System.out.println("Enter helpful:");
-                        int helpful = scanner.nextInt();
-                        scanner.nextLine();
-                        System.out.println("Enter reviewDate:");
-                        String reviewDate = scanner.nextLine();
+                        Integer rating = null;
+                        while (!InputCheck.ratingCheck(rating)) {
+                            System.out.println("Enter rating:");
+                            if(scanner.hasNextInt()) {
+                                rating = scanner.nextInt();
+                                scanner.nextLine();
+                            } else {
+                                System.out.println(COLOR_RED + "Invalid input. Please enter a valid number." + COLOR_RESET);
+                            }
+                        }
+                        Integer helpful = null;
+                        System.out.println("Enter helpful (leave empty for null):");
+                        String helpful_input = scanner.nextLine(); // Nimm die Eingabe als String
+                        // Überprüfen, ob die Eingabe leer ist (d.h. der Benutzer möchte "null")
+                        if (helpful_input.isEmpty()) {
+                            helpful = null; // helpful bleibt null
+                        } else {
+                            try {
+                                // Versuche, die Eingabe in eine Zahl umzuwandeln
+                                helpful = Integer.parseInt(helpful_input);
+                            } catch (NumberFormatException e) {
+                                // Ungültige Eingabe (keine Zahl)
+                                System.out.println(COLOR_RED + "Invalid input. Please enter a valid number or leave it empty for null." + COLOR_RESET);
+                            }
+                        }
+
+                        String reviewDate = java.time.LocalDate.now().toString();
+
+                        Integer customerId = null;
                         System.out.println("Enter customerId:");
-                        int customerId = scanner.nextInt();
-                        scanner.nextLine();
-                        System.out.println("Enter summary:");
-                        String summary = scanner.nextLine();
-                        System.out.println("Enter content:");
-                        String content = scanner.nextLine();
+                        String customerid_input = scanner.nextLine();
+                        if (customerid_input.isEmpty()) {
+                            customerId = null;
+                        } else {
+                            try {
+                                customerId = Integer.parseInt(customerid_input);
+                            } catch (NumberFormatException e) {
+                                System.out.println(COLOR_RED + "Invalid input. Please enter a valid number or leave it empty for null." + COLOR_RESET);
+                            }
+                        }
+                        String summary = null;
+                        while (!InputCheck.summaryCheck(summary)) {
+                            System.out.println("Enter summary:");
+                            summary = scanner.nextLine();
+                        }
+                        String content = null;
+                        while (!InputCheck.summaryCheck(content)) {
+                            System.out.println("Enter content:");
+                            content = scanner.nextLine();
+                        }
+                        
                         dbService.addNewReview(asin, rating, helpful, reviewDate, customerId, summary, content);
                         System.out.println("Review added successfully.");
                         break;
@@ -261,6 +308,18 @@ public class AppFrontend {
                         }
                         break;
                     }
+                    case 10: {
+                        
+                        //Erstelle den Kategorie-Baum mit der Methode aus DBService
+                        Category topCategory = dbService.getCategoryTree();
+
+                        //Da es mehrere Top-Level Kategorien gibt, wird eine Künstliche "TopCategory" als Wurzel erzeugt
+                        //Aufruf der rekursiven printCategory-methode
+                        //Nutzt Ausgabe im Stil von "tree" command (directories ausgeben)
+                        printCategory(topCategory, "", true);
+                    
+                        break;
+                    }
                     
                     //extra ...
                     case 11: {
@@ -288,5 +347,24 @@ public class AppFrontend {
                 scanner.nextLine(); // Clear the invalid input
             }
         }
+    }
+    //Rekursive Hilfsmethode, um den Category-Baum auszugeben
+    private static void printCategory(Category category, String prefix, boolean isLast) {
+        // Aktuellen Kategorienamen ausgeben
+        // Linien vor dem Namen sind abhängig davon, ob es das letzte Element auf dieser Ebene ist
+        System.out.println(prefix + (isLast ? "└── " : "├── ") + category.getName());
+
+        // Subkategorien der aktuellen Kategorie in Liste sammeln
+        List<Category> subCategories = category.getSubCategories();
+
+        // Iteriere durch die Subkategorien und rufe printCategory für sie alle rekursiv auf
+        for (int i = 0; i < subCategories.size(); i++) {
+            //Damit die "Baumstrukturlinien" beim letzten Kindelement abschliessen, wird hier geprüft, welche Subcategory die letzte ist
+            boolean lastSubCategory = (i == subCategories.size() - 1);
+            // Rekursiver Aufruf
+            // Damit die Kinder immer nach rechts verschoben angezeigt werden, wird hier das prefix um ein Paar Leerzeichen erweitert
+            printCategory(subCategories.get(i), prefix + (isLast ? "    " : "│   "), lastSubCategory);
+        }
+    
     }
 }

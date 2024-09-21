@@ -22,4 +22,45 @@ public class InputCheck {
             return false;
         }
     }
+
+    public static boolean patternCheck(String pattern) {
+        if (pattern == null) {
+            return false;
+        }
+        // Regex angepasst, um auch '_', '-', '[', ']', '(', ')' zu erlauben
+        if (pattern.matches("[A-Za-z0-9_\\-\\[\\]\\(\\)]+")) {
+            return true;
+        } else {
+            System.out.println(COLOR_RED_BACKGROUND + " The pattern does not have special characters! " + COLOR_RESET);
+            return false;
+        }
+    }
+    
+    //geile Review Methoden!
+    public static boolean ratingCheck(Integer rating) {
+        if (rating == null) {
+            return false;
+        }
+        // Überprüfen, ob das Rating im Bereich von 1 bis 5 liegt
+        if (rating >= 1 && rating <= 5) {
+            return true;
+        } else {
+            System.out.println(COLOR_RED_BACKGROUND + " The rating must be a number between 1 and 5! " + COLOR_RESET);
+            return false;
+        }
+    }
+    
+    public static boolean summaryCheck(String summary) {
+        if (summary == null) {
+            return false;
+        }
+        // Regex angepasst, um auch '_', '-', '[', ']', '(', ')' zu erlauben
+        if (summary.matches("[A-Za-z0-9_.,;!?\\-\\[\\]\\(\\)]+")) {
+            return true;
+        } else {
+            System.out.println(COLOR_RED_BACKGROUND + " The summary contains invalid characters! " + COLOR_RESET);
+            return false;
+        }
+    }
 }
+

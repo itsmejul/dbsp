@@ -2,17 +2,43 @@ package com.dbsp;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-import java.util.Properties;
 
-//import com.dbsp.entity.Shops;
-import com.dbsp.entity.*;
+import com.dbsp.entity.Actor;
+import com.dbsp.entity.Artist;
+import com.dbsp.entity.Audiotext;
+import com.dbsp.entity.Author;
+import com.dbsp.entity.Bookspec;
+import com.dbsp.entity.Categories;
+import com.dbsp.entity.Creator;
+import com.dbsp.entity.Customer;
+import com.dbsp.entity.CustomerBuyItem;
+import com.dbsp.entity.Director;
+import com.dbsp.entity.Dvdspec;
+import com.dbsp.entity.Item;
+import com.dbsp.entity.ItemCategories;
+import com.dbsp.entity.ItemCategoryId;
+import com.dbsp.entity.Labels;
+import com.dbsp.entity.Lists;
+import com.dbsp.entity.Musicspec;
+import com.dbsp.entity.Price;
+import com.dbsp.entity.ProductReviews;
+import com.dbsp.entity.Publishers;
+import com.dbsp.entity.Shops;
+import com.dbsp.entity.SimProducts;
+import com.dbsp.entity.Studios;
+import com.dbsp.entity.Tracks;
+import com.dbsp.extra.Category;
+import com.sun.jdi.IntegerType;
 
 import jakarta.persistence.TypedQuery;
 
@@ -169,8 +195,176 @@ public class DBService implements AppInterface {
         return products;
     }
 
-    // Fetches products by category path
+
+
+    public Category getCategoryTree() {
+        Session session = null;
+        List<Categories> categoriesList = null;
+
+        try {
+            // Step 1: Open a session and begin a transaction
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+
+            // Step 2: Fetch all categories from the database
+            Query<Categories> query = session.createQuery("FROM Categories", Categories.class);
+            categoriesList = query.list();
+
+            // Commit the transaction
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (session != null && session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        // If no categories were found, return an empty Category tree
+        if (categoriesList == null || categoriesList.isEmpty()) {
+            return new Category("TopCategory");
+        }
+
+        // Step 3: Build the category tree using the fetched categories
+        return buildTreeFromCategories(categoriesList);
+    }
+
+    private Category buildTreeFromCategories(List<Categories> categoriesList) {
+        // Create a map of Category ID -> Category instance to simplify tree building
+        Map<Integer, Category> categoryMap = new HashMap<>();
+
+        // Step 1: Create all Category instances and store them in the map
+        for (Categories dbCategory : categoriesList) {
+            categoryMap.put(dbCategory.getId(), new Category(dbCategory.getTitle()));
+        }
+
+        // Create a top-level "TopCategory" instance
+        Category topCategory = new Category("TopCategory");
+
+        // Step 2: Build the tree by linking child categories to their parents
+        for (Categories dbCategory : categoriesList) {
+            Integer parentId = dbCategory.getParentId();
+
+            // If parentId is null, it's a top-level category; add it to TopCategory
+            if (parentId == null) {
+                topCategory.addSubCategory(categoryMap.get(dbCategory.getId()));
+            } else {
+                // Find the parent category and add the current category as its subcategory
+                Category parentCategory = categoryMap.get(parentId);
+                if (parentCategory != null) {
+                    parentCategory.addSubCategory(categoryMap.get(dbCategory.getId()));
+                }
+            }
+        }
+
+        return topCategory;
+    }
+
+
+
+
+
+
+
+
+
     public List<Item> getProductsByCategoryPath(String categoryPath) {
+        Session session = null;
+        List<Item> items = new ArrayList<>();
+
+        try {
+            // Open a session and begin a transaction
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+
+            // Step 1: Parse the category path into its components
+            String[] categoryNames = categoryPath.split(">");
+
+            // Step 2: Find the target category based on the category path
+            Categories targetCategory = findCategoryByPath(session, categoryNames);
+            if (targetCategory == null) {
+                System.out.println("Category not found for the given path: " + categoryPath);
+                return items;  // Return empty list if category is not found
+            }
+
+            // Step 3: Retrieve the item ASINs for the found category
+            Query<String> itemAsinQuery = session.createQuery(
+                    "SELECT ic.asin FROM ItemCategories ic WHERE ic.categoryId = :categoryId", String.class);
+            itemAsinQuery.setParameter("categoryId", targetCategory.getId());
+            List<String> asinList = itemAsinQuery.list();
+
+            // Step 4: Fetch the corresponding Items by ASIN
+            if (!asinList.isEmpty()) {
+                Query<Item> itemQuery = session.createQuery(
+                        "FROM Item i WHERE i.asin IN (:asinList)", Item.class);
+                itemQuery.setParameter("asinList", asinList);
+                items = itemQuery.list();
+            }
+
+            // Commit the transaction
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (session != null && session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        return items;
+    }
+
+    // Helper method to recursively find a category based on the path components
+    private Categories findCategoryByPath(Session session, String[] categoryNames) {
+        Categories parentCategory = null;
+
+        for (String categoryName : categoryNames) {
+            Query<Categories> categoryQuery;
+
+            if (parentCategory == null) {
+                // First category in the path (top-level category)
+                categoryQuery = session.createQuery(
+                        "FROM Categories c WHERE c.title = :categoryName AND c.parentId IS NULL", Categories.class);
+            } else {
+                // Subsequent categories in the path (subcategories)
+                categoryQuery = session.createQuery(
+                        "FROM Categories c WHERE c.title = :categoryName AND c.parentId = :parentId", Categories.class);
+                categoryQuery.setParameter("parentId", parentCategory.getId());
+            }
+
+            categoryQuery.setParameter("categoryName", categoryName.trim());
+            List<Categories> categoryResult = categoryQuery.list();
+
+            if (categoryResult.isEmpty()) {
+                // If no category is found, return null
+                return null;
+            }
+
+            // Update the parent category for the next iteration
+            parentCategory = categoryResult.get(0);
+        }
+
+        return parentCategory;
+    }
+
+
+
+
+
+
+
+
+
+
+/*
+    // Fetches products by category path
+    public List<Item> getProductsByCategoryPath(String categoryPath) { 
         Session session = null;
         List<Item> products = null;
         try {
@@ -285,7 +479,7 @@ public class DBService implements AppInterface {
             }
         }
     }
-
+*/
     @Override
     public void addShop(String name, String street, int zip) {
         if (sessionFactory == null) {
@@ -394,7 +588,7 @@ public class DBService implements AppInterface {
         return cheaperSimilarItems;
     }
 
-    public void addNewReview(String asin, int rating, int helpful, String reviewDate, int customerId, String summary, String content) {
+    public void addNewReview(String asin, Integer rating, Integer helpful, String reviewDate, Integer customerId, String summary, String content) {
         Session session = null;
         Transaction transaction = null;
 

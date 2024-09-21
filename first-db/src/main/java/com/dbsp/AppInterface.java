@@ -6,6 +6,7 @@ import com.dbsp.entity.Customer;
 import com.dbsp.entity.Item;
 import com.dbsp.entity.Price;
 import com.dbsp.entity.ProductReviews;
+import com.dbsp.extra.Category;
 
 public interface AppInterface {
     void init(); // Initialisierungsmethode
@@ -16,6 +17,7 @@ public interface AppInterface {
 
     List<Item> getProducts(String pattern);
 
+    Category getCategoryTree();
     List<Item> getProductsByCategoryPath(String categoryPath);
 
     List<Item> getTopProducts(int k); //Items unter den Top k Ratings
@@ -23,7 +25,7 @@ public interface AppInterface {
     List<Item> getSimilarCheaperProduct(String asin);
 
     //unsicher wegen dem Review Ding!
-    void addNewReview(String asin, int rating, int helpful, String reviewDate, int customerId, String summary, String content);
+    void addNewReview(String asin, Integer rating, Integer helpful, String reviewDate, Integer customerId, String summary, String content);
     List<ProductReviews> showReviews(String asin);
 
     List<Customer>getTrolls(double averageRating);
