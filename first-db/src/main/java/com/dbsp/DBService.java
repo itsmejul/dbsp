@@ -536,13 +536,14 @@ public class DBService implements AppInterface {
         if (sessionFactory == null) {
             throw new IllegalStateException("Service not initialized. Call init() before using this method.");
         }
-        
+
         Session session = sessionFactory.getCurrentSession();
         Transaction tx = null;
 
         try {
             tx = session.beginTransaction();
-            ProductReviews newReview = new ProductReviews(asin, rating, helpful, reviewDate, customerId, summary, content);
+            ProductReviews newReview = new ProductReviews(asin, rating, helpful, reviewDate, customerId, summary,
+                    content);
             session.persist(newReview);// Speichert die Review in der Datenbank
             tx.commit();
         } catch (Exception e) {
@@ -599,14 +600,15 @@ public class DBService implements AppInterface {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
 
-            // HQL query to find customers whose average rating is below the specified
-            // averageRating
+            // HQL query, um customer zu finden deren averate rating unter dem übergebenen
+            // Wert ist
             String hql = "SELECT c FROM Customer c WHERE " +
                     "(SELECT AVG(r.rating) FROM ProductReviews r WHERE r.customerId = c.id) < :averageRating";
             TypedQuery<Customer> query = session.createQuery(hql, Customer.class);
+            // setze averageRating in der Query als Parameter
             query.setParameter("averageRating", averageRating);
 
-            // Execute the query and get the result list
+            // speichere Ergebnis der query in Liste
             trolls = query.getResultList();
 
             // Commit the transaction
