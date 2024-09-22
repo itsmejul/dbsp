@@ -9,9 +9,13 @@ import com.dbsp.entity.Price;
 import com.dbsp.entity.ProductReviews;
 import com.dbsp.extra.Category;
 import static com.dbsp.extra.Colors.COLOR_CYAN;
+import static com.dbsp.extra.Colors.COLOR_CYAN_BACKGROUND;
+import static com.dbsp.extra.Colors.COLOR_GREEN;
 import static com.dbsp.extra.Colors.COLOR_GREEN_BACKGROUND;
 import static com.dbsp.extra.Colors.COLOR_RED;
 import static com.dbsp.extra.Colors.COLOR_RESET;
+import static com.dbsp.extra.Colors.COLOR_WHITE;
+
 import com.dbsp.extra.InputCheck;
 
 public class AppFrontend {
@@ -107,22 +111,33 @@ public class AppFrontend {
 
                     // List<Item> getProductsByCategoryPath(String categoryPath);
                     case 3: {
-                        dbService.printAllCategoryTitles();
 
-                        // Step 1: Prompt the user to enter a category path
-                        System.out.println("Please enter the category path (e.g., 'CDs>1980s CDs>ABBA'):");
+                        // User-Eingabe lesen und speichern
+                        System.out.println(COLOR_CYAN_BACKGROUND + COLOR_WHITE
+                                +
+                                "Please enter the category path, seperated by the '>'-Symbol. (e.g., 'Formate>Box-Sets>Dance &amp; Electronic'):"
+                                + COLOR_RESET);
                         String categoryPath = scanner.nextLine();
 
-                        // Step 2: Fetch items based on the category path
+                        // Aufruf der entsprechenden dbService-Methode
                         List<Item> items = dbService.getProductsByCategoryPath(categoryPath);
 
-                        // Step 3: Print item titles to the console
+                        // dbService gibt eine Liste an Items zurück.
+                        // Hier werden alle Items mit asin und Titel in die Konsole ausgegeben
+                        // Da theoretisch jede Eingabe ein Kategorienname sein könnte, wird hier der
+                        // Input nicht weiter überprüft. Bei ungültigen Eingaben wird also einfach eine
+                        // leere Liste an items returnt
                         if (items.isEmpty()) {
-                            System.out.println("No items found for the given category path.");
+                            System.out.println(COLOR_CYAN_BACKGROUND + COLOR_WHITE
+                                    + "No items found for the given category path." + COLOR_RESET);
                         } else {
-                            System.out.println("Items found in category '" + categoryPath + "':");
+                            // Gib die gefundenen Items mit asin und titel aus
+                            System.out.println(COLOR_CYAN_BACKGROUND + COLOR_WHITE + "Items found in category '"
+                                    + categoryPath + "':"
+                                    + COLOR_RESET);
                             for (Item item : items) {
-                                System.out.println(item.getTitle() + "    asin:   " + item.getAsin());
+                                System.out.println(COLOR_CYAN + "asin: " + COLOR_RESET + item.getAsin() + COLOR_CYAN
+                                        + " Titel: " + COLOR_RESET + item.getTitle());
                             }
                         }
 
@@ -362,9 +377,12 @@ public class AppFrontend {
     // Rekursive Hilfsmethode, um den Category-Baum auszugeben
     private static void printCategory(Category category, String prefix, boolean isLast) {
         // Aktuellen Kategorienamen ausgeben
+        // vor dem Namen wird ein Prefix ausgegeben, worin bspw leerzeichen und Linien
+        // der Baumstruktur sind, damit alles akkurat aussieht
         // Linien vor dem Namen sind abhängig davon, ob es das letzte Element auf dieser
         // Ebene ist
-        System.out.println(prefix + (isLast ? "└── " : "├── ") + category.getName());
+        System.out.println(prefix + (isLast ? COLOR_GREEN + "└── " + COLOR_RESET : COLOR_GREEN + "├── " + COLOR_RESET)
+                + category.getName());
 
         // Subkategorien der aktuellen Kategorie in Liste sammeln
         List<Category> subCategories = category.getSubCategories();
@@ -378,7 +396,8 @@ public class AppFrontend {
             // Rekursiver Aufruf
             // Damit die Kinder immer nach rechts verschoben angezeigt werden, wird hier das
             // prefix um ein Paar Leerzeichen erweitert
-            printCategory(subCategories.get(i), prefix + (isLast ? "    " : "│   "), lastSubCategory);
+            printCategory(subCategories.get(i), prefix + (isLast ? "    " : COLOR_GREEN + "│   " + COLOR_RESET),
+                    lastSubCategory);
         }
 
     }

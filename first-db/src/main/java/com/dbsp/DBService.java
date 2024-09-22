@@ -50,24 +50,27 @@ public class DBService implements AppInterface {
         Properties dbProperties = new Properties();
         try {
 
-            // Load the properties from the file
+            // Hier werden die Parameter für die Initialisierung aus der db.properties-Datei
+            // geladen
             InputStream input = DBService.class.getClassLoader().getResourceAsStream("db.properties");
             if (input == null) {
                 throw new RuntimeException("Sorry, unable to find db.properties");
             }
 
-            // Load properties
+            // Lade die gelesene Property-Datei in das Properties-Objekt
             dbProperties.load(input);
-            // Validate critical properties
+
+            // Prüfe, dass keine wichtigen properties fehlen
             if (dbProperties.getProperty("hibernate.dialect") == null) {
                 throw new RuntimeException("Missing required property: hibernate.dialect");
             }
             if (dbProperties.getProperty("hibernate.connection.url") == null) {
                 throw new RuntimeException("Missing required property: hibernate.connection.url");
             }
-            // Erstelle eine Hibernate-Konfiguration und setze die Eigenschaften
+
+            // Erstelle eine Hibernate-Konfiguration
             Configuration configuration = new Configuration();
-            // Set the properties for Hibernate configuration
+            // Setze die geladenen Properties für die Hibernate-Konfiguration
             configuration.setProperties(dbProperties);
 
             // Füge die Annotationen-Klasse hinzu
@@ -96,7 +99,9 @@ public class DBService implements AppInterface {
             configuration.addAnnotatedClass(SimProducts.class);
             configuration.addAnnotatedClass(Studios.class);
             configuration.addAnnotatedClass(Tracks.class);
-            // Erstelle die SessionFactory
+
+            // Erstelle die SessionFactory und speichere sie in der Klasse, damit die
+            // anderen Methoden sie benutzen können
             sessionFactory = configuration.buildSessionFactory();
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,7 +114,7 @@ public class DBService implements AppInterface {
         return sessionFactory;
     }
 
-    // Closes all resources properly
+    // Finish-Methode, die alle Datenbankobjekte kontrolliert freigibt
     public void finish() {
         if (sessionFactory != null) {
             sessionFactory.close();
@@ -195,20 +200,27 @@ public class DBService implements AppInterface {
     }
 
     public Category getCategoryTree() {
+        // Wir haben eine neue Klasse "Category" erstellt, die für jede Category den
+        // Namen und eine Liste an Subcategories speichert
+        // Erst werden alle "Categories"-Instanzen aus der DB in eine Liste gelesen (die
+        // nur die parentID speichern), und dann mit einer
+        // Hilfsmethode in die Baumstruktur aus "Category"-Instanzen konvertiert
         Session session = null;
         List<Categories> categoriesList = null;
 
         try {
-            // Step 1: Open a session and begin a transaction
+            // Open a session and begin a transaction
             session = sessionFactory.openSession();
             session.beginTransaction();
 
-            // Step 2: Fetch all categories from the database
+            // Zuerst werden alle Categories in eine Liste geladen, damit man einfacher den
+            // Baum generieren kann
             Query<Categories> query = session.createQuery("FROM Categories", Categories.class);
             categoriesList = query.list();
 
             // Commit the transaction
             session.getTransaction().commit();
+
         } catch (Exception e) {
             if (session != null && session.getTransaction().isActive()) {
                 session.getTransaction().rollback();
@@ -220,36 +232,46 @@ public class DBService implements AppInterface {
             }
         }
 
-        // If no categories were found, return an empty Category tree
+        // Sollte es keine Categorien geben, returne eine Leere Category
         if (categoriesList == null || categoriesList.isEmpty()) {
             return new Category("TopCategory");
         }
 
-        // Step 3: Build the category tree using the fetched categories
+        // Mittels Hilfsmethode aus der Liste den Baum generieren
         return buildTreeFromCategories(categoriesList);
     }
 
     private Category buildTreeFromCategories(List<Categories> categoriesList) {
-        // Create a map of Category ID -> Category instance to simplify tree building
+
+        // Mappe jede CategoriesID auf eine Category-Instanz (für jede ID wird eine neue
+        // Category-Instanz erstellt)
+        // Die Instanzen müssen hier schon alle erstellt werden, da in der DB die
+        // Kategorien vielleicht nicht in der richtigen Reihenfolge sind (Kindern
+        // könnten vor ihren Eltern in der Liste stehen)
         Map<Integer, Category> categoryMap = new HashMap<>();
 
-        // Step 1: Create all Category instances and store them in the map
         for (Categories dbCategory : categoriesList) {
             categoryMap.put(dbCategory.getId(), new Category(dbCategory.getTitle()));
         }
 
-        // Create a top-level "TopCategory" instance
+        // Da gefordert war, die Wurzelkategorie auszugeben, aber es mehrere Top-Level
+        // Kategorien gibt, haben wir einen künstlichen Wurzelknoten "TopCategory"
+        // erstellt. Alle echten Top-Level Kategorien sind dann die Kinder dieses
+        // Wurzelknotens
         Category topCategory = new Category("TopCategory");
 
-        // Step 2: Build the tree by linking child categories to their parents
+        // Jetzt iterieren wir durch alle Kategorien und überprüfen, ob ihre parentID
+        // null ist
         for (Categories dbCategory : categoriesList) {
             Integer parentId = dbCategory.getParentId();
 
-            // If parentId is null, it's a top-level category; add it to TopCategory
+            // Wenn parentID null ist, ist es eine Top-Level Kategorie und wird ein Kind der
+            // TopCategory
             if (parentId == null) {
                 topCategory.addSubCategory(categoryMap.get(dbCategory.getId()));
             } else {
-                // Find the parent category and add the current category as its subcategory
+                // Ansonsten, suche aus der Map anhand der parentID die passende
+                // Parent-Kategorie und füge die aktuelle Kategorie als deren SubCategory hinzu
                 Category parentCategory = categoryMap.get(parentId);
                 if (parentCategory != null) {
                     parentCategory.addSubCategory(categoryMap.get(dbCategory.getId()));
@@ -261,6 +283,7 @@ public class DBService implements AppInterface {
     }
 
     public List<Item> getProductsByCategoryPath(String categoryPath) {
+
         Session session = null;
         List<Item> items = new ArrayList<>();
 
@@ -269,23 +292,27 @@ public class DBService implements AppInterface {
             session = sessionFactory.openSession();
             session.beginTransaction();
 
-            // Step 1: Parse the category path into its components
+            // Die übergebene User-Eingabe in die einzelnen Kategoriennamen splitten
             String[] categoryNames = categoryPath.split(">");
 
-            // Step 2: Find the target category based on the category path
+            // Rufe die Hilfsmethode auf und finde so die passende Categories-Instanz
             Categories targetCategory = findCategoryByPath(session, categoryNames);
+
             if (targetCategory == null) {
                 System.out.println("Category not found for the given path: " + categoryPath);
-                return items; // Return empty list if category is not found
+                return items;
+                // Wenn die gesuchte Kategorie nicht existiert, returne eine leere Liste
             }
 
-            // Step 3: Retrieve the item ASINs for the found category
+            // Suche aus ItemCategories eine Liste aller ASINs in der gesuchten Kategorie
             Query<String> itemAsinQuery = session.createQuery(
                     "SELECT ic.asin FROM ItemCategories ic WHERE ic.categoryId = :categoryId", String.class);
             itemAsinQuery.setParameter("categoryId", targetCategory.getId());
+            // Führe die Query aus
             List<String> asinList = itemAsinQuery.list();
 
-            // Step 4: Fetch the corresponding Items by ASIN
+            // Suche zusätzlich den Item-Instanzen anhand ihrer asins (damit Name etc
+            // ausgegeben werden können)
             if (!asinList.isEmpty()) {
                 Query<Item> itemQuery = session.createQuery(
                         "FROM Item i WHERE i.asin IN (:asinList)", Item.class);
@@ -309,33 +336,44 @@ public class DBService implements AppInterface {
         return items;
     }
 
-    // Helper method to recursively find a category based on the path components
     private Categories findCategoryByPath(Session session, String[] categoryNames) {
+        // Hilfsmethode, die anhand eines Pfades (String[]) die richtige
+        // Categories-Instanz auswählt
+
+        // Hilfsvariable, die immer anzeigt, an welcher Stelle des Pfades wir uns gerade
+        // befinden (also was gerade die parentCategory ist)
         Categories parentCategory = null;
 
         for (String categoryName : categoryNames) {
             Query<Categories> categoryQuery;
 
             if (parentCategory == null) {
-                // First category in the path (top-level category)
+                // Wenn parentCategory null ist, ist der aktuelle Name der Name eine Top-Level
+                // Kategorie
+                // Suche also nach allen Top-Kategorien mit dem passenden Namen
                 categoryQuery = session.createQuery(
                         "FROM Categories c WHERE c.title = :categoryName AND c.parentId IS NULL", Categories.class);
             } else {
-                // Subsequent categories in the path (subcategories)
+                // Wenn die aktuelle Kategorie eine Subkategorie ist, steht in parentCategory
+                // der Name der Parent Kategorie
+                // Suche also nach allen Kinder der parentCategory mit dem passenden Namen
                 categoryQuery = session.createQuery(
                         "FROM Categories c WHERE c.title = :categoryName AND c.parentId = :parentId", Categories.class);
                 categoryQuery.setParameter("parentId", parentCategory.getId());
             }
-
+            // Trimme Category Name, da evtl Leerzeichen danach angehängt sein könnten
             categoryQuery.setParameter("categoryName", categoryName.trim());
+
+            // Führe die Query aus und speichere die Ergebnisse in einer Liste
             List<Categories> categoryResult = categoryQuery.list();
 
             if (categoryResult.isEmpty()) {
-                // If no category is found, return null
+                // Wenn es keine passende Kategorie ist, returne null
                 return null;
             }
 
-            // Update the parent category for the next iteration
+            // Sollte es mehrere Kategorien mit gleichem Namen an gleicher Stelle geben,
+            // können wir sie nicht unterscheiden und nehmen einfach die erste
             parentCategory = categoryResult.get(0);
         }
 
