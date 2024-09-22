@@ -39,7 +39,7 @@ public class AppFrontend {
 
         Scanner scanner = new Scanner(System.in);
         // Erstelle den Service und initialisiere ihn
-        DBService dbService = new DBService();
+        AppInterface dbService = new DBService();
         dbService.init(); // Initialisierung des Services mit Properties
 
         while (true) {
@@ -75,20 +75,34 @@ public class AppFrontend {
                     // Item getProduct(String asin);
                     case 1: {
                         String asin = null;
+                        // Mit scanner so lange abfragen, bis User etwas gültiges eingibt (richtige
+                        // Länge etc)
                         while (!InputCheck.asinCheck(asin)) {
-                            System.out.print("Enter asin: ");
+                            System.out.print(COLOR_BLUE_BACKGROUND + "Enter asin (e.g. '3401024434'): " + COLOR_RESET);
                             asin = scanner.nextLine();
                         }
+                        // Aufruf der Methode aus dbService
                         Item product = dbService.getProduct(asin);
 
                         if (product != null) {
-                            System.out.println("Product Details:");
-                            System.out.println("Title: " + product.getTitle());
-                            System.out.println("Group: " + product.getPgroup());
-                            System.out.println("Sales Rank: " + product.getSalesrank());
-                            // Weitere Produktinformationen anzeigen...
+                            // Ausgabe aller Daten zum gefundenen Produkt
+                            System.out.println(COLOR_BLUE_BACKGROUND + "Product Details:" + COLOR_RESET);
+                            System.out.println(COLOR_CYAN + "ASIN: " + COLOR_RESET + product.getAsin());
+                            System.out.println(COLOR_CYAN + "Title: " + COLOR_RESET + product.getTitle());
+                            System.out.println(COLOR_CYAN + "Group/Type: " + COLOR_RESET + product.getPgroup());
+                            System.out.println(COLOR_CYAN + "Sales Rank: " + COLOR_RESET + product.getSalesrank());
+                            System.out.println(COLOR_CYAN + "EAN: " + COLOR_RESET + product.getEan());
+                            System.out.println(COLOR_CYAN + "Average Review Score: " + COLOR_RESET
+                                    + product.getAvg_review_score());
+                            System.out.println(COLOR_CYAN + "Picture Link: " + COLOR_RESET + product.getPicture());
+                            System.out
+                                    .println(COLOR_CYAN + "Detail page Link: " + COLOR_RESET + product.getDetailpage());
+
                         } else {
-                            System.out.println("No product found with ASIN: " + asin);
+                            // Wenn product null ist, existiert in der DB kein Produkt mit der angegebenen
+                            // ASIN
+                            System.out.println(
+                                    COLOR_BLUE_BACKGROUND + "No product found with ASIN: " + asin + COLOR_RESET);
                         }
                         break;
                     }

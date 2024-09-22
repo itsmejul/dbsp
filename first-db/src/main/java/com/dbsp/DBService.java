@@ -135,7 +135,8 @@ public class DBService implements AppInterface {
             // Begin a transaction
             session.beginTransaction();
 
-            // Fetch the item using the ASIN as the identifier
+            // Da die ASIN der Primary Key von Item ist, können wir hier einfach session.get
+            // benutzen anstatt einer Query
             product = session.get(Item.class, asin);
 
             // Commit the transaction
