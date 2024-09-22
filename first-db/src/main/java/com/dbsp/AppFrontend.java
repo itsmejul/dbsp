@@ -11,6 +11,8 @@ import com.dbsp.extra.Category;
 import static com.dbsp.extra.Colors.COLOR_CYAN;
 import static com.dbsp.extra.Colors.COLOR_CYAN_BACKGROUND;
 import static com.dbsp.extra.Colors.COLOR_GREEN;
+
+import static com.dbsp.extra.Colors.COLOR_RED_BACKGROUND;
 import static com.dbsp.extra.Colors.COLOR_GREEN_BACKGROUND;
 import static com.dbsp.extra.Colors.COLOR_RED;
 import static com.dbsp.extra.Colors.COLOR_RESET;
@@ -161,7 +163,8 @@ public class AppFrontend {
                             }
                         } else {
                             // Handle non-integer input
-                            System.out.println(COLOR_RED + "Invalid input. Please enter a valid number." + COLOR_RESET);
+                            System.out.println(
+                                    COLOR_RED_BACKGROUND + "Invalid input. Please enter a valid number." + COLOR_RESET);
                             scanner.nextLine(); // Clear the invalid input
                         }
                         break;
@@ -209,7 +212,8 @@ public class AppFrontend {
                                 scanner.nextLine();
                             } else {
                                 System.out.println(
-                                        COLOR_RED + "Invalid input. Please enter a valid number." + COLOR_RESET);
+                                        COLOR_RED_BACKGROUND + "Invalid input. Please enter a valid number."
+                                                + COLOR_RESET);
                             }
                         }
                         Integer helpful = null;
@@ -224,7 +228,7 @@ public class AppFrontend {
                                 helpful = Integer.parseInt(helpful_input);
                             } catch (NumberFormatException e) {
                                 // Ungültige Eingabe (keine Zahl)
-                                System.out.println(COLOR_RED
+                                System.out.println(COLOR_RED_BACKGROUND
                                         + "Invalid input. Please enter a valid number or leave it empty for null."
                                         + COLOR_RESET);
                             }
@@ -242,20 +246,20 @@ public class AppFrontend {
                             } else {
                                 try {
                                     customerId = Integer.parseInt(customerid_input);
-                                    if(dbService.getCustomer(customerId) == null) {
+                                    if (dbService.getCustomer(customerId) == null) {
                                         System.out.println(COLOR_RED
-                                            + "Invalid customerId. Please enter a valid customerId!"
-                                            + COLOR_RESET);
+                                                + "Invalid customerId. Please enter a valid customerId!"
+                                                + COLOR_RESET);
                                         customerId = -1;
                                     }
                                 } catch (NumberFormatException e) {
-                                    System.out.println(COLOR_RED
+                                    System.out.println(COLOR_RED_BACKGROUND
                                             + "Invalid input. Please enter a valid number or leave it empty for null."
                                             + COLOR_RESET);
                                 }
                             }
                         }
-                        
+
                         String summary = null;
                         while (!InputCheck.summaryCheck(summary)) {
                             System.out.println("Enter summary:");
@@ -307,6 +311,7 @@ public class AppFrontend {
                         if (scanner.hasNextDouble()) {
                             averageRating = scanner.nextDouble();
                             scanner.nextLine();
+                            // Überprüfen, dass Eingabe ein double-Wert zwischen 1 und 5 ist
                             if (InputCheck.trollsCheck(averageRating)) {
                                 List<Customer> trolls = dbService.getTrolls(averageRating);
                                 if (trolls != null && !trolls.isEmpty()) {
@@ -322,9 +327,10 @@ public class AppFrontend {
                                 }
                             } else {
                                 //
-                            }  
+                            }
                         } else {
-                            System.out.println("Invalid input. Please enter a valid number.");
+                            System.out.println(
+                                    COLOR_RED_BACKGROUND + "Invalid input. Please enter a valid number." + COLOR_RESET);
                         }
 
                         break;
@@ -391,7 +397,7 @@ public class AppFrontend {
 
             } else {
                 // Handle non-integer input
-                System.out.println(COLOR_RED + "Invalid input. Please enter a valid number." + COLOR_RESET);
+                System.out.println(COLOR_RED_BACKGROUND + "Invalid input. Please enter a valid number." + COLOR_RESET);
                 scanner.nextLine(); // Clear the invalid input
             }
         }
