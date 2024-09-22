@@ -380,89 +380,6 @@ public class DBService implements AppInterface {
         return parentCategory;
     }
 
-    /*
-     * // Fetches products by category path
-     * public List<Item> getProductsByCategoryPath(String categoryPath) {
-     * Session session = null;
-     * List<Item> products = null;
-     * try {
-     * // Open a session
-     * session = sessionFactory.openSession();
-     * session.beginTransaction();
-     * 
-     * // Split the category path into parts
-     * String[] categoryNames = categoryPath.split(">");
-     * Integer parentId = null; // Starting with root category parent ID, assumed to
-     * be 0 or NULL
-     * 
-     * // Iterate over the category path parts to find the category ID
-     * Integer finalCategoryId = null;
-     * for (String categoryName : categoryNames) {
-     * categoryName = categoryName.trim(); // Remove any leading/trailing whitespace
-     * 
-     * // Use HQL to find the category with the given name and parent ID
-     * Query<Categories> query;
-     * if (parentId == null) {
-     * // Handle root categories with parentId null
-     * System.out.print(categoryName);
-     * query = session.createQuery(
-     * "FROM Categories WHERE trim(title) = :title AND parentId IS NULL",
-     * Categories.class); // AND
-     * // c.parentId
-     * // IS
-     * // NULL
-     * } else {
-     * // Handle child categories with a specified parentId
-     * query = session.createQuery(
-     * "FROM Categories c WHERE c.title = :title AND c.parentId = :parentId",
-     * Categories.class);
-     * query.setParameter("parentId", parentId);
-     * }
-     * query.setParameter("title", categoryName);
-     * 
-     * List<Categories> categories = query.getResultList();
-     * 
-     * if (categories.isEmpty()) {
-     * System.out.println("Category not found: " + categoryName);
-     * return null; // Return null if any category in the path is not found
-     * } else {
-     * System.out.println("found");
-     * }
-     * 
-     * Categories category = categories.get(0);
-     * finalCategoryId = category.getId();
-     * parentId = finalCategoryId; // Set parentId to the current category's ID for
-     * the next iteration
-     * }
-     * 
-     * // Now, finalCategoryId should contain the ID of the last category in the
-     * path
-     * if (finalCategoryId != null) {
-     * // Query to find all items linked to this category
-     * Query<Item> itemQuery = session.createQuery(
-     * "SELECT i FROM Item i JOIN ItemCategories ic ON i.asin = ic.asin WHERE ic.categoryId = :categoryId"
-     * ,
-     * Item.class);
-     * itemQuery.setParameter("categoryId", finalCategoryId);
-     * 
-     * products = itemQuery.getResultList();
-     * }
-     * 
-     * session.getTransaction().commit();
-     * 
-     * } catch (Exception e) {
-     * if (session != null && session.getTransaction().isActive()) {
-     * session.getTransaction().rollback();
-     * }
-     * e.printStackTrace();
-     * } finally {
-     * if (session != null) {
-     * session.close();
-     * }
-     * }
-     * return products;
-     * }
-     */
     public void printAllCategoryTitles() {
         Session session = null;
         try {
@@ -741,6 +658,36 @@ public class DBService implements AppInterface {
         }
 
         return offers;
+    }
+
+    @Override
+    public Customer getCustomer(Integer customerId) {
+        Session session = null;
+        Customer customer = null;
+        try {
+            // Open a session
+            session = sessionFactory.openSession();
+
+            // Begin a transaction
+            session.beginTransaction();
+
+            // Fetch the Customer using the ID as the identifier
+            customer = session.get(Customer.class, customerId);
+
+            // Commit the transaction
+            session.getTransaction().commit();
+
+        } catch (Exception e) {
+            if (session != null && session.getTransaction().isActive()) {
+                session.getTransaction().rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return customer;
     }
 
     // Implementiere weitere Methoden hier, falls benötigt.

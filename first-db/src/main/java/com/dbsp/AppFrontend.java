@@ -15,7 +15,6 @@ import static com.dbsp.extra.Colors.COLOR_GREEN_BACKGROUND;
 import static com.dbsp.extra.Colors.COLOR_RED;
 import static com.dbsp.extra.Colors.COLOR_RESET;
 import static com.dbsp.extra.Colors.COLOR_WHITE;
-
 import com.dbsp.extra.InputCheck;
 
 public class AppFrontend {
@@ -192,9 +191,15 @@ public class AppFrontend {
                     case 6: {
                         // check alles
                         String asin = null;
-                        while (!InputCheck.asinCheck(asin)) {
+                        while (asin == null) {
                             System.out.println("Enter asin: ");
                             asin = scanner.nextLine();
+                            if (!InputCheck.asinCheck(asin)) {
+                                asin = null;
+                            } else if (dbService.getProduct(asin) == null) {
+                                System.out.println("Invalid asin. Please enter a valid asin!");
+                                asin = null;
+                            }
                         }
                         Integer rating = null;
                         while (!InputCheck.ratingCheck(rating)) {
@@ -228,20 +233,29 @@ public class AppFrontend {
                         String reviewDate = java.time.LocalDate.now().toString();
                         System.out.println("Today is " + reviewDate);
 
-                        Integer customerId = null;
-                        System.out.println("Enter customerId:");
-                        String customerid_input = scanner.nextLine();
-                        if (customerid_input.isEmpty()) {
-                            customerId = null;
-                        } else {
-                            try {
-                                customerId = Integer.parseInt(customerid_input);
-                            } catch (NumberFormatException e) {
-                                System.out.println(COLOR_RED
-                                        + "Invalid input. Please enter a valid number or leave it empty for null."
-                                        + COLOR_RESET);
+                        Integer customerId = -1;
+                        while (customerId == -1) {
+                            System.out.println("Enter customerId:");
+                            String customerid_input = scanner.nextLine();
+                            if (customerid_input.isEmpty()) {
+                                customerId = null;
+                            } else {
+                                try {
+                                    customerId = Integer.parseInt(customerid_input);
+                                    if(dbService.getCustomer(customerId) == null) {
+                                        System.out.println(COLOR_RED
+                                            + "Invalid customerId. Please enter a valid customerId!"
+                                            + COLOR_RESET);
+                                        customerId = -1;
+                                    }
+                                } catch (NumberFormatException e) {
+                                    System.out.println(COLOR_RED
+                                            + "Invalid input. Please enter a valid number or leave it empty for null."
+                                            + COLOR_RESET);
+                                }
                             }
                         }
+                        
                         String summary = null;
                         while (!InputCheck.summaryCheck(summary)) {
                             System.out.println("Enter summary:");

@@ -39,5 +39,6 @@ public interface AppInterface {
 
     void addShop(String name, String street, int zip);
 
+    Customer getCustomer(Integer customerId);
     // hier alle methoden rein, die in Aufgabenstellung sind
 }
