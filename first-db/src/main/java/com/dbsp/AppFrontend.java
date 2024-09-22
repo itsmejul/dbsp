@@ -211,6 +211,7 @@ public class AppFrontend {
                         }
 
                         String reviewDate = java.time.LocalDate.now().toString();
+                        System.out.println("Today is " + reviewDate);
 
                         Integer customerId = null;
                         System.out.println("Enter customerId:");

@@ -38,7 +38,6 @@ import com.dbsp.entity.SimProducts;
 import com.dbsp.entity.Studios;
 import com.dbsp.entity.Tracks;
 import com.dbsp.extra.Category;
-import com.sun.jdi.IntegerType;
 
 import jakarta.persistence.TypedQuery;
 
@@ -579,32 +578,25 @@ public class DBService implements AppInterface {
 
     public void addNewReview(String asin, Integer rating, Integer helpful, String reviewDate, Integer customerId,
             String summary, String content) {
-        Session session = null;
-        Transaction transaction = null;
+        if (sessionFactory == null) {
+            throw new IllegalStateException("Service not initialized. Call init() before using this method.");
+        }
+        
+        Session session = sessionFactory.getCurrentSession();
+        Transaction tx = null;
 
         try {
-            // Open session and begin transaction
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-
-            // Create new ProductReviews object
-            ProductReviews newReview = new ProductReviews(asin, rating, helpful, reviewDate, customerId, summary,
-                    content);
-
-            // Save the review in the database
-            session.save(newReview);
-
-            // Commit transaction
-            transaction.commit();
+            tx = session.beginTransaction();
+            ProductReviews newReview = new ProductReviews(asin, rating, helpful, reviewDate, customerId, summary, content);
+            session.persist(newReview);// Speichert die Review in der Datenbank
+            tx.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
+            if (tx != null) {
+                tx.rollback();
             }
             e.printStackTrace();
         } finally {
-            if (session != null) {
-                session.close();
-            }
+            session.close();
         }
     }
 

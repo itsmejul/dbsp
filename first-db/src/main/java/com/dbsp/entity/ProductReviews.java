@@ -2,6 +2,8 @@ package com.dbsp.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -10,6 +12,7 @@ import jakarta.persistence.Table;
 public class ProductReviews {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // Ensures Hibernate uses the auto-increment functionality
 	@Column(name="review_id")
 	private Integer id;
 	@Column(name="asin")

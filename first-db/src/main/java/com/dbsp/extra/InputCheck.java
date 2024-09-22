@@ -28,7 +28,8 @@ public class InputCheck {
             return false;
         }
         // Regex angepasst, um auch '_', '-', '[', ']', '(', ')' zu erlauben
-        if (pattern.matches("[A-Za-z0-9_\\-\\[\\]\\(\\)]+")) {
+        // \\s für whitespace
+        if (pattern.matches("[A-Za-z0-9_\\-\\[\\]\\(\\)\\s]+")) {
             return true;
         } else {
             System.out.println(COLOR_RED_BACKGROUND + " The pattern does not have special characters! " + COLOR_RESET);
