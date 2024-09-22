@@ -8,6 +8,8 @@ import com.dbsp.entity.Item;
 import com.dbsp.entity.Price;
 import com.dbsp.entity.ProductReviews;
 import com.dbsp.extra.Category;
+
+import static com.dbsp.extra.Colors.COLOR_BLUE_BACKGROUND;
 import static com.dbsp.extra.Colors.COLOR_CYAN;
 import static com.dbsp.extra.Colors.COLOR_CYAN_BACKGROUND;
 import static com.dbsp.extra.Colors.COLOR_GREEN;
@@ -94,18 +96,39 @@ public class AppFrontend {
                     // List<Item> getProducts(String pattern);
                     case 2: {
                         String pattern = null;
-                        while (!InputCheck.patternCheck(pattern)) {
-                            System.out.print("Enter title pattern:");
+                        // Hilfsvariable, damit while-schleife mindestens einmal ausgeführt
+                        // wird, da auch leere Eingabe erlaubt ist
+                        boolean hasAsked = false;
+
+                        while (!InputCheck.patternCheck(pattern) || !hasAsked) {
+                            hasAsked = true;
+                            System.out.print(COLOR_BLUE_BACKGROUND +
+                                    "Enter title pattern (e.g. 'Harry Potter %'). Leave empty to print all items:"
+                                    + COLOR_RESET);
+
                             pattern = scanner.nextLine();
+                            // Erlaube auch leeres pattern als Eingabe, welches dann alle Items ausgibt
+                            if (pattern.isEmpty()) {
+                                break;
+                            }
                         }
+                        // Da dbService-Methode null-Wert ermöglicht, aber Scanner immer "" ausgibt,
+                        // wird das hier umgewandelt
+                        if (pattern == "") {
+                            pattern = null;
+                        }
+
                         List<Item> products = dbService.getProducts(pattern);
+
                         if (products != null && !products.isEmpty()) {
-                            System.out.println("Products matching the pattern:");
+                            System.out.println(COLOR_BLUE_BACKGROUND + "Products matching the pattern:" + COLOR_RESET);
                             for (Item p : products) {
-                                System.out.println("ASIN: " + p.getAsin() + ", Title: " + p.getTitle());
+                                System.out.println(COLOR_CYAN + "ASIN: " + COLOR_RESET + p.getAsin() + COLOR_CYAN
+                                        + ", Title: " + COLOR_RESET + p.getTitle());
                             }
                         } else {
-                            System.out.println("No products found matching the pattern: " + pattern);
+                            System.out.println(COLOR_BLUE_BACKGROUND + "No products found matching the pattern: "
+                                    + pattern + COLOR_RESET);
                         }
                         break;
                     }

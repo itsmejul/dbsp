@@ -5,7 +5,7 @@ import static com.dbsp.extra.Colors.COLOR_RESET;
 
 public class InputCheck {
     public static boolean asinCheck(String asin) {
-        if (asin == null){
+        if (asin == null) {
             return false;
         }
         // Prüfen, ob die Länge genau 10 Zeichen beträgt
@@ -14,7 +14,7 @@ public class InputCheck {
             return false;
         }
         // Prüfen, ob der String nur Buchstaben und Zahlen enthält
-        //return asin.matches("[A-Za-z0-9]+");
+        // return asin.matches("[A-Za-z0-9]+");
         if (asin.matches("[A-Za-z0-9]+")) {
             return true;
         } else {
@@ -25,19 +25,22 @@ public class InputCheck {
 
     public static boolean patternCheck(String pattern) {
         if (pattern == null) {
+            return true;
+        }
+        if (pattern == "") {
             return false;
         }
         // Regex angepasst, um auch '_', '-', '[', ']', '(', ')' zu erlauben
         // \\s für whitespace
-        if (pattern.matches("[A-Za-z0-9_\\-\\[\\]\\(\\)\\s]+")) {
+        if (pattern.matches("[A-Za-z0-9_\\%\\-\\[\\]\\(\\)\\s]+")) {
             return true;
         } else {
             System.out.println(COLOR_RED_BACKGROUND + " The pattern does not have special characters! " + COLOR_RESET);
             return false;
         }
     }
-    
-    //geile Review Methoden!
+
+    // geile Review Methoden!
     public static boolean ratingCheck(Integer rating) {
         if (rating == null) {
             return false;
@@ -50,7 +53,7 @@ public class InputCheck {
             return false;
         }
     }
-    
+
     public static boolean trollsCheck(Double averageRating) {
         if (averageRating == null) {
             return false;
@@ -76,4 +79,3 @@ public class InputCheck {
         }
     }
 }
-

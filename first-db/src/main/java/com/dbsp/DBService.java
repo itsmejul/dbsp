@@ -154,7 +154,8 @@ public class DBService implements AppInterface {
         return product;
     }
 
-    // Fetches a list of products matching the given pattern
+    // Returne Liste aller Items, deren Titel dem Pattern (inkl. Wildcards)
+    // entspricht
     public List<Item> getProducts(String pattern) {
         Session session = null;
         List<Item> products = null;
@@ -168,19 +169,20 @@ public class DBService implements AppInterface {
             String hql;
             Query<Item> query;
 
-            // Check if the pattern is null or not
+            // Prüfe, ob das pattern null ist
             if (pattern == null) {
-                // Fetch all products if pattern is null
+                // Falls ja, sollen alle Items zurückgegeben werden
                 hql = "FROM Item";
                 query = session.createQuery(hql, Item.class);
             } else {
-                // Fetch products with titles matching the pattern
+                // Ansonsten die Items, deren Titel mittels Like-Operator mit Pattern
+                // übereinstimmt
                 hql = "FROM Item WHERE title LIKE :pattern";
                 query = session.createQuery(hql, Item.class);
                 query.setParameter("pattern", pattern);
             }
 
-            // Execute the query and get the result list
+            // Speichere Ergebnisse der Query in Liste
             products = query.getResultList();
 
             // Commit the transaction
