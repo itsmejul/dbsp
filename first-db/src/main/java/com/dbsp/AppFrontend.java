@@ -302,22 +302,31 @@ public class AppFrontend {
 
                     // List<Customer>getTrolls(double averageRating);
                     case 8: {
+                        Double averageRating = null;
                         System.out.println("Enter average rating:");
-                        double averageRating = scanner.nextDouble();
-                        scanner.nextLine();
-                        // check between 1 & 5
-                        List<Customer> trolls = dbService.getTrolls(averageRating);
-                        if (trolls != null && !trolls.isEmpty()) {
-                            System.out.println("Trolls with average rating of " + averageRating + ":");
-                            for (Customer troll : trolls) {
-                                System.out.println("Customer ID: " + troll.getId());
-                                System.out.println("Name: " + troll.getUsername());
-                                System.out.println("Iban: " + troll.getIban());
-                                System.out.println("-----------------------------------------------");
-                            }
+                        if (scanner.hasNextDouble()) {
+                            averageRating = scanner.nextDouble();
+                            scanner.nextLine();
+                            if (InputCheck.trollsCheck(averageRating)) {
+                                List<Customer> trolls = dbService.getTrolls(averageRating);
+                                if (trolls != null && !trolls.isEmpty()) {
+                                    System.out.println("Trolls with average rating of " + averageRating + ":");
+                                    for (Customer troll : trolls) {
+                                        System.out.println("Customer ID: " + troll.getId());
+                                        System.out.println("Name: " + troll.getUsername());
+                                        System.out.println("Iban: " + troll.getIban());
+                                        System.out.println("-----------------------------------------------");
+                                    }
+                                } else {
+                                    System.out.println("No trolls found with average rating of " + averageRating);
+                                }
+                            } else {
+                                //
+                            }  
                         } else {
-                            System.out.println("No trolls found with average rating of " + averageRating);
+                            System.out.println("Invalid input. Please enter a valid number.");
                         }
+
                         break;
                     }
 

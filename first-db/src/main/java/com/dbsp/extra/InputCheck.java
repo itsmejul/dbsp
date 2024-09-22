@@ -51,6 +51,18 @@ public class InputCheck {
         }
     }
     
+    public static boolean trollsCheck(Double averageRating) {
+        if (averageRating == null) {
+            return false;
+        }
+        if (averageRating >= 1 && averageRating <= 5) {
+            return true;
+        } else {
+            System.out.println(COLOR_RED_BACKGROUND + " The rating must be a number between 1 and 5! " + COLOR_RESET);
+            return false;
+        }
+    }
+
     public static boolean summaryCheck(String summary) {
         if (summary == null) {
             return false;
