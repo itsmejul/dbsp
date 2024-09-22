@@ -24,18 +24,6 @@ import com.dbsp.extra.InputCheck;
 public class AppFrontend {
 
     public static void main(String[] args) {
-        // Lade die parameter aus der Property-Datei
-        /*
-         * Properties dbProperties = new Properties();
-         * try (FileInputStream input = new
-         * FileInputStream("src/main/resources/db.properties")) {
-         * dbProperties.load(input);
-         * } catch (IOException e) {
-         * e.printStackTrace();
-         * System.out.println("Properties konnten nicht geladen werden.");
-         * return;
-         * }
-         */
 
         Scanner scanner = new Scanner(System.in);
         // Erstelle den Service und initialisiere ihn
@@ -57,6 +45,8 @@ public class AppFrontend {
             System.out.println(COLOR_CYAN + "10" + COLOR_RESET + ". GetCategoryTree");
             System.out.println(COLOR_CYAN + "11" + COLOR_RESET + ". Add a new shop");
             System.out.print("Enter your choice: ");
+
+            // Nur int Eingaben erlauben
             if (scanner.hasNextInt()) {
                 int choice = scanner.nextInt();
                 scanner.nextLine(); // Consume newline

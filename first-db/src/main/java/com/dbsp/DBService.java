@@ -383,47 +383,6 @@ public class DBService implements AppInterface {
         return parentCategory;
     }
 
-    public void printAllCategoryTitles() {
-        Session session = null;
-        try {
-            // Open a session
-            session = sessionFactory.openSession();
-            session.beginTransaction();
-            String title = "Alle SACDs";
-
-            // Use HQL to retrieve all categories
-            Query<Categories> query = session.createQuery("FROM Categories WHERE trim(title) = :title",
-                    Categories.class);
-            query.setParameter("title", title.trim());
-            List<Categories> categories = query.getResultList();
-            int ee = 0;
-            // Print out each category title
-            System.out.println("All categories in the database:");
-            for (Categories category : categories) {
-                if (ee < 20) {
-
-                    System.out.println("ID: " + category.getId() + " - Title: " + category.getTitle() + " - Parent ID: "
-                            + category.getParentId());
-
-                }
-                ee++;
-
-            }
-
-            session.getTransaction().commit();
-
-        } catch (Exception e) {
-            if (session != null && session.getTransaction().isActive()) {
-                session.getTransaction().rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
-    }
-
     @Override
     public void addShop(String name, String street, int zip) {
         if (sessionFactory == null) {
