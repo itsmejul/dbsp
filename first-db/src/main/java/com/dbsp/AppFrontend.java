@@ -291,6 +291,9 @@ public class AppFrontend {
                             System.out.println(COLOR_BLUE_BACKGROUND + "Enter customerId: " + COLOR_RESET);
                             String customerid_input = scanner.nextLine();
                             if (customerid_input.isEmpty()) {
+                                System.out.println(COLOR_RED_BACKGROUND
+                                        + "Please enter a valid customerId!"
+                                        + COLOR_RESET);
                                 customerId = -1;
                             } else {
                                 try {
@@ -303,7 +306,7 @@ public class AppFrontend {
                                     }
                                 } catch (NumberFormatException e) {
                                     System.out.println(COLOR_RED_BACKGROUND
-                                            + "Invalid input. Please enter a valid number or leave it empty for null."
+                                            + "Invalid input. Please enter a valid number."
                                             + COLOR_RESET);
                                 }
                             }
@@ -311,17 +314,17 @@ public class AppFrontend {
 
                         String summary = null;
                         while (!InputCheck.summaryCheck(summary)) {
-                            System.out.println("Enter summary:");
+                            System.out.println(COLOR_BLUE_BACKGROUND + "Enter review summary:" + COLOR_RESET);
                             summary = scanner.nextLine();
                         }
                         String content = null;
                         while (!InputCheck.summaryCheck(content)) {
-                            System.out.println("Enter content:");
+                            System.out.println(COLOR_BLUE_BACKGROUND + "Enter review content:" + COLOR_RESET);
                             content = scanner.nextLine();
                         }
 
                         dbService.addNewReview(asin, rating, helpful, reviewDate, customerId, summary, content);
-                        System.out.println("Review added successfully.");
+                        System.out.println(COLOR_BLUE_BACKGROUND + "Review added successfully." + COLOR_RESET);
                         break;
                     }
 
