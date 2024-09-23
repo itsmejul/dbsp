@@ -383,31 +383,6 @@ public class DBService implements AppInterface {
         return parentCategory;
     }
 
-    @Override
-    public void addShop(String name, String street, int zip) {
-        if (sessionFactory == null) {
-            throw new IllegalStateException("Service not initialized. Call init() before using this method.");
-        }
-
-        Session session = sessionFactory.getCurrentSession();
-        Transaction tx = null;
-
-        try {
-            tx = session.beginTransaction();
-            Shops shop = new Shops(name, street, zip);
-            session.persist(shop); // Speichert den Shop in der Datenbank
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-    }
-
-    // ab hier noch nicht getestet, lg Simon
     public List<Item> getTopProducts(int k) {
         // Items unter den Top k Ratings
         Session session = null;
@@ -418,14 +393,16 @@ public class DBService implements AppInterface {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
 
-            // HQL query to get the top k products ordered by avg_review_score in descending
-            // order
-            String hql = "FROM Item i ORDER BY i.avg_review_score DESC";
+            // HQL query, die alle Produkte nach avg_review_score absteigend sortiert
+            // ausgibt
+            String hql = "FROM Item i WHERE i.avg_review_score IS NOT NULL ORDER BY i.avg_review_score DESC";
             // das ist Hibernate Query Language HQL
             TypedQuery<Item> query = session.createQuery(hql, Item.class);
+            // hier wird festgelegt, wie viele Results wir nur wollen (Nutzereingabe), ab k
+            // wird abgeschnitten
             query.setMaxResults(k);
 
-            // Execute the query and get the results
+            // Query ausführen und Ergebnisse in Liste speichern
             products = query.getResultList();
 
             // Commit the transaction
@@ -654,5 +631,27 @@ public class DBService implements AppInterface {
         return customer;
     }
 
-    // Implementiere weitere Methoden hier, falls benötigt.
+    @Override
+    public void addShop(String name, String street, int zip) {
+        if (sessionFactory == null) {
+            throw new IllegalStateException("Service not initialized. Call init() before using this method.");
+        }
+
+        Session session = sessionFactory.getCurrentSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+            Shops shop = new Shops(name, street, zip);
+            session.persist(shop); // Speichert den Shop in der Datenbank
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 }

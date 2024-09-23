@@ -11,7 +11,6 @@ import com.dbsp.extra.Category;
 
 import static com.dbsp.extra.Colors.COLOR_BLUE_BACKGROUND;
 import static com.dbsp.extra.Colors.COLOR_CYAN;
-import static com.dbsp.extra.Colors.COLOR_CYAN_BACKGROUND;
 import static com.dbsp.extra.Colors.COLOR_GREEN;
 
 import static com.dbsp.extra.Colors.COLOR_RED_BACKGROUND;
@@ -55,6 +54,7 @@ public class AppFrontend {
 
                     // void finish();
                     case 0: {
+                        // Beende System und schließe DB-Verbindung
                         dbService.finish();
                         System.out.println("Exiting...");
                         scanner.close();
@@ -141,7 +141,7 @@ public class AppFrontend {
                     case 3: {
 
                         // User-Eingabe lesen und speichern
-                        System.out.println(COLOR_CYAN_BACKGROUND + COLOR_WHITE
+                        System.out.println(COLOR_BLUE_BACKGROUND
                                 +
                                 "Please enter the category path, seperated by the '>'-Symbol. (e.g., 'Formate>Box-Sets>Dance &amp; Electronic'):"
                                 + COLOR_RESET);
@@ -156,11 +156,11 @@ public class AppFrontend {
                         // Input nicht weiter überprüft. Bei ungültigen Eingaben wird also einfach eine
                         // leere Liste an items returnt
                         if (items.isEmpty()) {
-                            System.out.println(COLOR_CYAN_BACKGROUND + COLOR_WHITE
+                            System.out.println(COLOR_BLUE_BACKGROUND + COLOR_WHITE
                                     + "No items found for the given category path." + COLOR_RESET);
                         } else {
                             // Gib die gefundenen Items mit asin und titel aus
-                            System.out.println(COLOR_CYAN_BACKGROUND + COLOR_WHITE + "Items found in category '"
+                            System.out.println(COLOR_BLUE_BACKGROUND + COLOR_WHITE + "Items found in category '"
                                     + categoryPath + "':"
                                     + COLOR_RESET);
                             for (Item item : items) {
@@ -174,25 +174,29 @@ public class AppFrontend {
 
                     // List<Item> getTopProducts(int k);
                     case 4: {
-                        System.out.println("Enter amount of top products:");
+                        System.out.println(COLOR_BLUE_BACKGROUND
+                                + "Enter amount of top products (There are 721 Products with a perfect 5 star rating):"
+                                + COLOR_RESET);
                         if (scanner.hasNextInt()) {
                             int k = scanner.nextInt();
-                            // nextInt eigtl (nicht) safe
-                            //
+
                             List<Item> topProducts = dbService.getTopProducts(k);
                             if (topProducts != null && !topProducts.isEmpty()) {
-                                System.out.println("Top " + k + " products:");
+                                System.out.println(COLOR_BLUE_BACKGROUND + "Top " + k + " products:" + COLOR_RESET);
                                 for (Item product : topProducts) {
-                                    System.out.println("ASIN: " + product.getAsin() + ", Title: " + product.getTitle());
+                                    System.out.println(COLOR_CYAN + "Average rating: " + COLOR_RESET
+                                            + product.getAvg_review_score() + COLOR_CYAN + ", ASIN: " + COLOR_RESET
+                                            + product.getAsin()
+                                            + COLOR_CYAN + ", Title: " + COLOR_RESET + product.getTitle());
                                 }
                             } else {
-                                System.out.println("No top products found.");
+                                System.out.println(COLOR_BLUE_BACKGROUND + "No top products found." + COLOR_RESET);
                             }
                         } else {
-                            // Handle non-integer input
+                            // Falls kein Integer eingegeben wird
                             System.out.println(
                                     COLOR_RED_BACKGROUND + "Invalid input. Please enter a valid number." + COLOR_RESET);
-                            scanner.nextLine(); // Clear the invalid input
+                            scanner.nextLine(); //
                         }
                         break;
                     }
