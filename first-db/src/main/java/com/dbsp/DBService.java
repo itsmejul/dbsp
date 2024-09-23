@@ -11,6 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.engine.internal.Collections;
 import org.hibernate.query.Query;
 
 import com.dbsp.entity.Actor;
@@ -430,11 +431,16 @@ public class DBService implements AppInterface {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
 
-            // HQL query to get the price of the original product from the Price table
+            // Zuerst holen wir mit einer HQL query den Preis des angegebenen Produkts
             String originalProductPriceQuery = "SELECT p.price_value FROM Price p WHERE p.asin = :asin";
             TypedQuery<Integer> originalProductPrice = session.createQuery(originalProductPriceQuery, Integer.class);
             originalProductPrice.setParameter("asin", asin);
-            int originalPrice = originalProductPrice.getSingleResult(); // Get the original product price
+            // In Liste speichern, da manche Produkte mehrere Preise haben
+
+            List<Integer> originalPrices = originalProductPrice.getResultList();
+
+            // Sollte ein Produkt mehrere Angebote haben, wird das teuerste ausgewählt
+            int originalPrice = java.util.Collections.max(originalPrices);
 
             // HQL query to get similar products that have a lower price than the original
             // product

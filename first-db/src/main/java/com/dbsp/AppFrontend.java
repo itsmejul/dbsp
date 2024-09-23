@@ -205,17 +205,22 @@ public class AppFrontend {
                     case 5: {
                         String asin = null;
                         while (!InputCheck.asinCheck(asin)) {
-                            System.out.print("Enter asin: ");
+                            System.out.print(COLOR_BLUE_BACKGROUND
+                                    + "Enter asin of product to search for similar cheaper products (e.g. 'B0000014HX'): "
+                                    + COLOR_RESET);
                             asin = scanner.nextLine();
                         }
+                        // Aufruf der methode aus dbService
                         List<Item> similarProducts = dbService.getSimilarCheaperProduct(asin);
+
                         if (similarProducts != null && !similarProducts.isEmpty()) {
-                            System.out.println("Similar products:");
+                            System.out.println(COLOR_BLUE_BACKGROUND + "Similar products:" + COLOR_RESET);
                             for (Item product : similarProducts) {
-                                System.out.println("ASIN: " + product.getAsin() + ", Title: " + product.getTitle());
+                                System.out.println(COLOR_CYAN + "ASIN: " + COLOR_RESET + product.getAsin() + COLOR_CYAN
+                                        + ", Title: " + COLOR_RESET + product.getTitle());
                             }
                         } else {
-                            System.out.println("No similar products found.");
+                            System.out.println(COLOR_BLUE_BACKGROUND + "No similar products found." + COLOR_RESET);
                         }
                         break;
                     }
