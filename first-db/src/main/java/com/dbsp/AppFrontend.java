@@ -43,7 +43,7 @@ public class AppFrontend {
             System.out.println(COLOR_CYAN + "9" + COLOR_RESET + ". getOffers");
             System.out.println(COLOR_CYAN + "10" + COLOR_RESET + ". GetCategoryTree");
             System.out.println(COLOR_CYAN + "11" + COLOR_RESET + ". Add a new shop");
-            System.out.print("Enter your choice: ");
+            System.out.print(COLOR_BLUE_BACKGROUND + "Enter your choice: " + COLOR_RESET);
 
             // Nur int Eingaben erlauben
             if (scanner.hasNextInt()) {
@@ -333,25 +333,27 @@ public class AppFrontend {
                         String asin = null;
                         // check asin
                         while (!InputCheck.asinCheck(asin)) {
-                            System.out.print("Enter asin: ");
+                            System.out.print(COLOR_BLUE_BACKGROUND + "Enter asin of the item to see the reviews: "
+                                    + COLOR_RESET);
                             asin = scanner.nextLine();
                         }
                         // dann weiter mit der asin
+                        // Aufruf der dbService-Methode
                         List<ProductReviews> reviews = dbService.showReviews(asin);
                         if (reviews != null && !reviews.isEmpty()) {
-                            System.out.println("Reviews for " + asin + ":");
+                            System.out.println(COLOR_BLUE_BACKGROUND + "Reviews for " + asin + ":" + COLOR_RESET);
                             for (ProductReviews review : reviews) {
                                 System.out.println(
                                         COLOR_CYAN + "-----------------------------------------------" + COLOR_RESET);
-                                System.out.println("Rating: " + review.getRating());
-                                System.out.println("Helpful: " + review.getHelpful());
-                                System.out.println("Review Date: " + review.getReviewDate());
-                                System.out.println("Customer ID: " + review.getCustomerId());
-                                System.out.println("Summary: " + review.getSummary());
-                                System.out.println("Content: " + review.getContent());
+                                System.out.println(COLOR_CYAN + "Rating: " + COLOR_RESET + review.getRating());
+                                System.out.println(COLOR_CYAN + "Helpful: " + COLOR_RESET + review.getHelpful());
+                                System.out.println(COLOR_CYAN + "Review Date: " + COLOR_RESET + review.getReviewDate());
+                                System.out.println(COLOR_CYAN + "Customer ID: " + COLOR_RESET + review.getCustomerId());
+                                System.out.println(COLOR_CYAN + "Summary: " + COLOR_RESET + review.getSummary());
+                                System.out.println(COLOR_CYAN + "Content: " + COLOR_RESET + review.getContent());
                             }
                         } else {
-                            System.out.println("No reviews found for " + asin);
+                            System.out.println(COLOR_BLUE_BACKGROUND + "No reviews found for " + asin + COLOR_RESET);
                         }
                         break;
                     }
@@ -359,30 +361,35 @@ public class AppFrontend {
                     // List<Customer>getTrolls(double averageRating);
                     case 8: {
                         Double averageRating = null;
-                        System.out.println("Enter average rating:");
+                        System.out.println(COLOR_BLUE_BACKGROUND + "Enter average rating:" + COLOR_RESET);
                         if (scanner.hasNextDouble()) {
                             averageRating = scanner.nextDouble();
                             scanner.nextLine();
                             // Überprüfen, dass Eingabe ein double-Wert zwischen 1 und 5 ist
                             if (InputCheck.trollsCheck(averageRating)) {
+                                // Aufruf der dbService Methode
                                 List<Customer> trolls = dbService.getTrolls(averageRating);
                                 if (trolls != null && !trolls.isEmpty()) {
-                                    System.out.println("Trolls with average rating of " + averageRating + ":");
+                                    System.out.println(COLOR_BLUE_BACKGROUND + "Trolls with average rating of "
+                                            + averageRating + ":" + COLOR_RESET);
                                     for (Customer troll : trolls) {
-                                        System.out.println("Customer ID: " + troll.getId());
-                                        System.out.println("Name: " + troll.getUsername());
-                                        System.out.println("Iban: " + troll.getIban());
-                                        System.out.println("-----------------------------------------------");
+                                        System.out.println(COLOR_CYAN + "Customer ID: " + COLOR_RESET + troll.getId());
+                                        System.out.println(COLOR_CYAN + "Name: " + COLOR_RESET + troll.getUsername());
+                                        System.out.println(COLOR_CYAN + "Iban: " + COLOR_RESET + troll.getIban());
+                                        System.out.println(COLOR_CYAN
+                                                + "-----------------------------------------------" + COLOR_RESET);
                                     }
                                 } else {
-                                    System.out.println("No trolls found with average rating of " + averageRating);
+                                    System.out.println(COLOR_BLUE_BACKGROUND + "No trolls found with average rating of "
+                                            + averageRating + COLOR_RESET);
                                 }
                             } else {
                                 //
                             }
                         } else {
                             System.out.println(
-                                    COLOR_RED_BACKGROUND + "Invalid input. Please enter a valid number." + COLOR_RESET);
+                                    COLOR_RED_BACKGROUND + "Invalid input. Please enter a valid double between 1 and 5."
+                                            + COLOR_RESET);
                         }
 
                         break;
@@ -393,22 +400,30 @@ public class AppFrontend {
                         String asin = null;
                         // check asin
                         while (!InputCheck.asinCheck(asin)) {
-                            System.out.print("Enter asin: ");
+                            System.out.print(COLOR_BLUE_BACKGROUND
+                                    + "Enter asin to get the offers (e.g. 'B000000WMJ'): " + COLOR_RESET);
                             asin = scanner.nextLine();
                         }
                         // dann weiter mit der asin
+                        // Aufruf der dbService-Methode
                         List<Price> offers = dbService.getOffers(asin);
+                        // Überprüfe, ob es überhaupt Angebote gibt
                         if (offers != null && !offers.isEmpty()) {
-                            System.out.println("Offers for " + asin + ":");
+                            // Falls ja, gebe alle Infos zu den Angeboten aus (Preis wird aus value und mult
+                            // berechnet)
+                            System.out.println(COLOR_BLUE_BACKGROUND + "Offers for " + asin + ":" + COLOR_RESET);
                             for (Price offer : offers) {
-                                System.out.println("Price State: " + offer.getPrice_state() + " Price Value: "
-                                        + offer.getPrice_value() + " Price Mult: " + offer.getPrice_mult()
-                                        + " Price Currency: " + offer.getPrice_currency());
-                                System.out.println("at Shop: " + offer.getPrice_shop_id());
-                                System.out.println("-----------------------------------------------");
+                                System.out.println(COLOR_CYAN + "Shop: " + COLOR_RESET + offer.getPrice_shop_id()
+                                        + COLOR_CYAN
+                                        + ", Preis: " + COLOR_RESET +
+                                        +offer.getPrice_mult() * offer.getPrice_value() + offer.getPrice_currency()
+                                        + COLOR_CYAN + ", Zustand: " + COLOR_RESET + offer.getPrice_state());
+
+                                System.out.println(
+                                        COLOR_CYAN + "-----------------------------------------------" + COLOR_RESET);
                             }
                         } else {
-                            System.out.println("No offers found for " + asin);
+                            System.out.println(COLOR_BLUE_BACKGROUND + "No offers found for " + asin + COLOR_RESET);
                         }
                         break;
                     }
