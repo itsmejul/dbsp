@@ -256,27 +256,11 @@ public class AppFrontend {
 
                             }
 
-                        } /*
-                           * Integer helpful = null;
-                           * String readHelpful = null;
-                           * while (helpful == null) {
-                           * 
-                           * System.out.println(COLOR_BLUE_BACKGROUND +
-                           * "Enter helpful score (leave empty for null):" + COLOR_RESET);
-                           * readRating = scanner.nextLine();
-                           * if (!InputCheck.helpfulCheck(readHelpful)) {
-                           * helpful = null;
-                           * } else {
-                           * helpful = Integer.parseInt(readHelpful);
-                           * 
-                           * }
-                           * 
-                           * }
-                           */
+                        }
                         // helpful gibt an, wie oft andere Nutzer die Rezension als hilfreich bewertet
-                        // haben. Da macht es keinen Sinn, das mit einem anderen Wert als null zu
+                        // haben. Da macht es keinen Sinn, das mit einem anderen Wert als 0 zu
                         // initialisieren
-                        Integer helpful = null;
+                        Integer helpful = 0;
                         /*
                          * System.out
                          * .println(COLOR_BLUE_BACKGROUND + "Enter helpful (leave empty for null):" +
