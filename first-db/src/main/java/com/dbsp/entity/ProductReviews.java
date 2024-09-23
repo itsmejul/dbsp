@@ -8,33 +8,34 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="product_reviews")
+@Table(name = "product_reviews")
 public class ProductReviews {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // Ensures Hibernate uses the auto-increment functionality
-	@Column(name="review_id")
+	@Column(name = "review_id")
 	private Integer id;
-	@Column(name="asin")
+	@Column(name = "asin")
 	private String asin;
-	@Column(name="rating")
+	@Column(name = "rating")
 	private Integer rating;
-	@Column(name="helpful")
+	@Column(name = "helpful")
 	private Integer helpful;
-	@Column(name="reviewdate")
+	@Column(name = "reviewdate")
 	private String reviewDate;
-	@Column(name="customer_id")
+	@Column(name = "customer_id")
 	private Integer customerId;
-	@Column(name="summary")
+	@Column(name = "summary")
 	private String summary;
-	@Column(name="review_content")
+	@Column(name = "review_content", length = 3677)
 	private String content;
-	
+
 	public ProductReviews() {
-		
+
 	}
 
-	public ProductReviews(String asin, Integer rating, Integer helpful, String reviewDate, Integer customerId, String summary,
+	public ProductReviews(String asin, Integer rating, Integer helpful, String reviewDate, Integer customerId,
+			String summary,
 			String content) {
 		this.asin = asin;
 		this.rating = rating;
@@ -108,5 +109,5 @@ public class ProductReviews {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 }

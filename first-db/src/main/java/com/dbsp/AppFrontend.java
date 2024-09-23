@@ -231,27 +231,48 @@ public class AppFrontend {
                         // check alles
                         String asin = null;
                         while (asin == null) {
-                            System.out.println("Enter asin: ");
+                            System.out.println(COLOR_BLUE_BACKGROUND + "Enter asin: " + COLOR_RESET);
                             asin = scanner.nextLine();
                             if (!InputCheck.asinCheck(asin)) {
                                 asin = null;
                             } else if (dbService.getProduct(asin) == null) {
-                                System.out.println("Invalid asin. Please enter a valid asin!");
+                                System.out.println(COLOR_RED_BACKGROUND
+                                        + "There is no product with this asin in the database. Please enter a valid asin!"
+                                        + COLOR_RESET);
                                 asin = null;
                             }
                         }
+
                         Integer rating = null;
-                        while (!InputCheck.ratingCheck(rating)) {
-                            System.out.println("Enter rating:");
-                            if (scanner.hasNextInt()) {
-                                rating = scanner.nextInt();
-                                scanner.nextLine();
+                        while (rating == null) {
+
+                            System.out.println(COLOR_BLUE_BACKGROUND + "Enter rating:" + COLOR_RESET);
+                            rating = Integer.parseInt(scanner.nextLine());
+                            if (!InputCheck.ratingCheck(rating)) {
+                                rating = null;
                             } else {
                                 System.out.println(
-                                        COLOR_RED_BACKGROUND + "Invalid input. Please enter a valid number."
+                                        COLOR_RED_BACKGROUND + "Rating must be an integer between 1 and 5!"
                                                 + COLOR_RESET);
                             }
-                        }
+
+                        } /*
+                           * Integer rating = null;
+                           * while (!InputCheck.ratingCheck(rating)) {
+                           * 
+                           * System.out.println(COLOR_BLUE_BACKGROUND + "Enter rating:" + COLOR_RESET);
+                           * scanner.nextLine();
+                           * if (scanner.hasNextInt()) {
+                           * rating = scanner.nextInt();
+                           * scanner.nextLine();
+                           * } else {
+                           * System.out.println(
+                           * COLOR_RED_BACKGROUND + "Rating must be an integer between 1 and 5!"
+                           * + COLOR_RESET);
+                           * }
+                           * 
+                           * }
+                           */
                         Integer helpful = null;
                         System.out.println("Enter helpful (leave empty for null):");
                         String helpful_input = scanner.nextLine(); // Nimm die Eingabe als String
@@ -437,6 +458,7 @@ public class AppFrontend {
                 scanner.nextLine(); // Clear the invalid input
             }
         }
+
     }
 
     // Rekursive Hilfsmethode, um den Category-Baum auszugeben

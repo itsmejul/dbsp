@@ -442,8 +442,8 @@ public class DBService implements AppInterface {
             // Sollte ein Produkt mehrere Angebote haben, wird das teuerste ausgewählt
             int originalPrice = java.util.Collections.max(originalPrices);
 
-            // HQL query to get similar products that have a lower price than the original
-            // product
+            // HQL query, um die Produkte auszuwählen, die sowohl similar sind als auch
+            // niedrigeren Preis haben
             String hql = """
                         SELECT i FROM Item i
                         WHERE i.asin IN (
@@ -457,7 +457,7 @@ public class DBService implements AppInterface {
             query.setParameter("asin", asin);
             query.setParameter("originalPrice", originalPrice);
 
-            // Execute the query and get the result list
+            // Query ausführen und Ergebnis in Liste speichern
             cheaperSimilarItems = query.getResultList();
 
             // Commit the transaction
