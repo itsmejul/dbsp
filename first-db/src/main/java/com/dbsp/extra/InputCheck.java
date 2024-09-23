@@ -41,18 +41,58 @@ public class InputCheck {
     }
 
     // geile Review Methoden!
-    public static boolean ratingCheck(Integer rating) {
-        if (rating == null) {
+    public static boolean ratingCheck(String readRating) {
+        if (readRating == null) {
+            System.out
+                    .println(COLOR_RED_BACKGROUND + " The rating cannot be empty! " + COLOR_RESET);
             return false;
+        }
+        try {
+            Integer rating = Integer.parseInt(readRating);
+            if (rating >= 1 && rating <= 5) {
+                return true;
+            } else {
+                System.out
+                        .println(COLOR_RED_BACKGROUND + " The rating must be a number between 1 and 5! " + COLOR_RESET);
+                return false;
+            }
+
+        } catch (NumberFormatException e) {
+            System.out
+                    .println(COLOR_RED_BACKGROUND + " The rating must be an integer value! " + COLOR_RESET);
+            return false; // Parsing failed
         }
         // Überprüfen, ob das Rating im Bereich von 1 bis 5 liegt
-        if (rating >= 1 && rating <= 5) {
-            return true;
-        } else {
-            System.out.println(COLOR_RED_BACKGROUND + " The rating must be a number between 1 and 5! " + COLOR_RESET);
-            return false;
-        }
-    }
+
+    }/*
+      * public static boolean helpfulCheck(String readHelpful) {
+      * if (readRating == null) {
+      * System.out
+      * .println(COLOR_RED_BACKGROUND + " The rating cannot be empty! " +
+      * COLOR_RESET);
+      * return true;
+      * }
+      * try {
+      * Integer rating = Integer.parseInt(readRating);
+      * if (rating >= 1 && rating <= 5) {
+      * return true;
+      * } else {
+      * System.out
+      * .println(COLOR_RED_BACKGROUND +
+      * " The rating must be a number between 1 and 5! " + COLOR_RESET);
+      * return false;
+      * }
+      * 
+      * } catch (NumberFormatException e) {
+      * System.out
+      * .println(COLOR_RED_BACKGROUND + " The rating must be an integer value! " +
+      * COLOR_RESET);
+      * return false; // Parsing failed
+      * }
+      * // Überprüfen, ob das Rating im Bereich von 1 bis 5 liegt
+      * 
+      * }
+      */
 
     public static boolean trollsCheck(Double averageRating) {
         if (averageRating == null) {

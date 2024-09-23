@@ -244,68 +244,76 @@ public class AppFrontend {
                         }
 
                         Integer rating = null;
+                        String readRating = null;
                         while (rating == null) {
 
                             System.out.println(COLOR_BLUE_BACKGROUND + "Enter rating:" + COLOR_RESET);
-                            rating = Integer.parseInt(scanner.nextLine());
-                            if (!InputCheck.ratingCheck(rating)) {
+                            readRating = scanner.nextLine();
+                            if (!InputCheck.ratingCheck(readRating)) {
                                 rating = null;
                             } else {
-                                System.out.println(
-                                        COLOR_RED_BACKGROUND + "Rating must be an integer between 1 and 5!"
-                                                + COLOR_RESET);
+                                rating = Integer.parseInt(readRating);
+
                             }
 
                         } /*
-                           * Integer rating = null;
-                           * while (!InputCheck.ratingCheck(rating)) {
+                           * Integer helpful = null;
+                           * String readHelpful = null;
+                           * while (helpful == null) {
                            * 
-                           * System.out.println(COLOR_BLUE_BACKGROUND + "Enter rating:" + COLOR_RESET);
-                           * scanner.nextLine();
-                           * if (scanner.hasNextInt()) {
-                           * rating = scanner.nextInt();
-                           * scanner.nextLine();
+                           * System.out.println(COLOR_BLUE_BACKGROUND +
+                           * "Enter helpful score (leave empty for null):" + COLOR_RESET);
+                           * readRating = scanner.nextLine();
+                           * if (!InputCheck.helpfulCheck(readHelpful)) {
+                           * helpful = null;
                            * } else {
-                           * System.out.println(
-                           * COLOR_RED_BACKGROUND + "Rating must be an integer between 1 and 5!"
-                           * + COLOR_RESET);
+                           * helpful = Integer.parseInt(readHelpful);
+                           * 
                            * }
                            * 
                            * }
                            */
+                        // helpful gibt an, wie oft andere Nutzer die Rezension als hilfreich bewertet
+                        // haben. Da macht es keinen Sinn, das mit einem anderen Wert als null zu
+                        // initialisieren
                         Integer helpful = null;
-                        System.out.println("Enter helpful (leave empty for null):");
-                        String helpful_input = scanner.nextLine(); // Nimm die Eingabe als String
-                        // Überprüfen, ob die Eingabe leer ist (d.h. der Benutzer möchte "null")
-                        if (helpful_input.isEmpty()) {
-                            helpful = null; // helpful bleibt null
-                        } else {
-                            try {
-                                // Versuche, die Eingabe in eine Zahl umzuwandeln
-                                helpful = Integer.parseInt(helpful_input);
-                            } catch (NumberFormatException e) {
-                                // Ungültige Eingabe (keine Zahl)
-                                System.out.println(COLOR_RED_BACKGROUND
-                                        + "Invalid input. Please enter a valid number or leave it empty for null."
-                                        + COLOR_RESET);
-                            }
-                        }
+                        /*
+                         * System.out
+                         * .println(COLOR_BLUE_BACKGROUND + "Enter helpful (leave empty for null):" +
+                         * COLOR_RESET);
+                         * String helpful_input = scanner.nextLine(); // Nimm die Eingabe als String
+                         * // Überprüfen, ob die Eingabe leer ist (d.h. der Benutzer möchte "null")
+                         * if (helpful_input.isEmpty()) {
+                         * helpful = null; // helpful bleibt null
+                         * } else {
+                         * try {
+                         * // Versuche, die Eingabe in eine Zahl umzuwandeln
+                         * helpful = Integer.parseInt(helpful_input);
+                         * } catch (NumberFormatException e) {
+                         * // Ungültige Eingabe (keine Zahl)
+                         * System.out.println(COLOR_RED_BACKGROUND
+                         * + "Invalid input. Please enter a valid number or leave it empty for null."
+                         * + COLOR_RESET);
+                         * }
+                         * }
+                         */
 
                         String reviewDate = java.time.LocalDate.now().toString();
-                        System.out.println("Today is " + reviewDate);
+                        System.out.println(COLOR_BLUE_BACKGROUND + "Today is " + reviewDate
+                                + ". This date will be added to the review." + COLOR_RESET);
 
                         Integer customerId = -1;
                         while (customerId == -1) {
-                            System.out.println("Enter customerId:");
+                            System.out.println(COLOR_BLUE_BACKGROUND + "Enter customerId: " + COLOR_RESET);
                             String customerid_input = scanner.nextLine();
                             if (customerid_input.isEmpty()) {
-                                customerId = null;
+                                customerId = -1;
                             } else {
                                 try {
                                     customerId = Integer.parseInt(customerid_input);
                                     if (dbService.getCustomer(customerId) == null) {
-                                        System.out.println(COLOR_RED
-                                                + "Invalid customerId. Please enter a valid customerId!"
+                                        System.out.println(COLOR_RED_BACKGROUND
+                                                + "There is no customer with this ID in the database. Please enter a valid customerId!"
                                                 + COLOR_RESET);
                                         customerId = -1;
                                     }
