@@ -511,12 +511,12 @@ public class DBService implements AppInterface {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
 
-            // HQL query to get all reviews for the given ASIN
+            // Retrieve alle Reviews einer gegebenen ASIN
             String hql = "FROM ProductReviews r WHERE r.asin = :asin";
             TypedQuery<ProductReviews> query = session.createQuery(hql, ProductReviews.class);
             query.setParameter("asin", asin);
 
-            // Execute the query and get the result list
+            // Ergebnisse in Liste speichern
             reviews = query.getResultList();
 
             // Commit the transaction
@@ -582,13 +582,13 @@ public class DBService implements AppInterface {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
 
-            // HQL query to get all price offers for a given ASIN where price_value is
-            // greater than 0
+            // Mit HQL query alle Preisangebote bekommen, wo der Wert > 0 ist und die ASIN
+            // übereinstimmt
             String hql = "FROM Price p WHERE p.asin = :asin AND p.price_value > 0";
             TypedQuery<Price> query = session.createQuery(hql, Price.class);
             query.setParameter("asin", asin);
 
-            // Execute the query and get the result list
+            // Speichere Ergebnisse in Liste
             offers = query.getResultList();
 
             // Commit the transaction
@@ -609,6 +609,7 @@ public class DBService implements AppInterface {
 
     @Override
     public Customer getCustomer(Integer customerId) {
+        // Hilfsmethode, die gebraucht wird, um zu prüfen, ob eine CustomerID existiert
         Session session = null;
         Customer customer = null;
         try {
@@ -618,7 +619,7 @@ public class DBService implements AppInterface {
             // Begin a transaction
             session.beginTransaction();
 
-            // Fetch the Customer using the ID as the identifier
+            // Mittels ID nach Customer suchen
             customer = session.get(Customer.class, customerId);
 
             // Commit the transaction
