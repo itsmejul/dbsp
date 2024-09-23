@@ -35,4 +35,5 @@ public interface AppInterface {
 
     List<Price> getOffers(String asin);
 
+    Customer getCustomer(Integer customerId);
 }
