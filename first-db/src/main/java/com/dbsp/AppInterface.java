@@ -10,7 +10,7 @@ import com.dbsp.extra.Category;
 
 public interface AppInterface {
 
-    void init(); // Initialisierungsmethode
+    void init();
 
     void finish();
 
@@ -22,11 +22,10 @@ public interface AppInterface {
 
     List<Item> getProductsByCategoryPath(String categoryPath);
 
-    List<Item> getTopProducts(int k); // Items unter den Top k Ratings
+    List<Item> getTopProducts(int k);
 
     List<Item> getSimilarCheaperProduct(String asin);
 
-    // unsicher wegen dem Review Ding!
     void addNewReview(String asin, Integer rating, Integer helpful, String reviewDate, Integer customerId,
             String summary, String content);
 
@@ -35,10 +34,5 @@ public interface AppInterface {
     List<Customer> getTrolls(double averageRating);
 
     List<Price> getOffers(String asin);
-    // extra Methoden
 
-    void addShop(String name, String street, int zip);
-
-    Customer getCustomer(Integer customerId);
-    // hier alle methoden rein, die in Aufgabenstellung sind
 }

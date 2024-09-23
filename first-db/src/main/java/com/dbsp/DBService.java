@@ -637,27 +637,4 @@ public class DBService implements AppInterface {
         return customer;
     }
 
-    @Override
-    public void addShop(String name, String street, int zip) {
-        if (sessionFactory == null) {
-            throw new IllegalStateException("Service not initialized. Call init() before using this method.");
-        }
-
-        Session session = sessionFactory.getCurrentSession();
-        Transaction tx = null;
-
-        try {
-            tx = session.beginTransaction();
-            Shops shop = new Shops(name, street, zip);
-            session.persist(shop); // Speichert den Shop in der Datenbank
-            tx.commit();
-        } catch (Exception e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-    }
 }

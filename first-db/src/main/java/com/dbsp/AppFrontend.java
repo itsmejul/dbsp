@@ -441,20 +441,6 @@ public class AppFrontend {
                         break;
                     }
 
-                    // extra ...
-                    case 11: {
-                        System.out.print("Enter shop name: ");
-                        String name = scanner.nextLine();
-                        System.out.print("Enter shop street: ");
-                        String street = scanner.nextLine();
-                        System.out.print("Enter shop zip code: ");
-                        int zip = scanner.nextInt();
-
-                        dbService.addShop(name, street, zip);
-                        System.out.println("Shop added successfully.");
-                        break;
-                    }
-
                     default:
                         System.out.println(
                                 COLOR_RED + "This choice doesn't exist (yet). Please try again." + COLOR_RESET);
