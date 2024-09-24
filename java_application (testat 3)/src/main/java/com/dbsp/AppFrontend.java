@@ -42,7 +42,6 @@ public class AppFrontend {
             System.out.println(COLOR_CYAN + "8" + COLOR_RESET + ". getTrolls");
             System.out.println(COLOR_CYAN + "9" + COLOR_RESET + ". getOffers");
             System.out.println(COLOR_CYAN + "10" + COLOR_RESET + ". GetCategoryTree");
-            System.out.println(COLOR_CYAN + "11" + COLOR_RESET + ". Add a new shop");
             System.out.print(COLOR_BLUE_BACKGROUND + "Enter your choice: " + COLOR_RESET);
 
             // Nur int Eingaben erlauben
