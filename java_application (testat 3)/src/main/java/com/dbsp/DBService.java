@@ -11,7 +11,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.engine.internal.Collections;
 import org.hibernate.query.Query;
 
 import com.dbsp.entity.Actor;
@@ -75,7 +74,6 @@ public class DBService implements AppInterface {
             configuration.setProperties(dbProperties);
 
             // Füge die Annotationen-Klasse hinzu
-            // TODO alle Klassen hier die notwendig sind
             configuration.addAnnotatedClass(Actor.class);
             configuration.addAnnotatedClass(Artist.class);
             configuration.addAnnotatedClass(Audiotext.class);
