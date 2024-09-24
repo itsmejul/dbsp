@@ -1,23 +1,27 @@
 package com.dbsp.entity;
 
+import com.dbsp.entity.keys.DirectorId;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="director")
+@Table(name = "director")
+@IdClass(DirectorId.class)
 public class Director {
 
 	@Id
-	@Column(name="director_name")
+	@Column(name = "director_name")
 	private String name;
 	@Id
-	@Column(name="asin")
+	@Column(name = "asin")
 	private String asin;
-	
+
 	public Director() {
-		
+
 	}
 
 	public Director(String name, String asin) {
@@ -40,5 +44,5 @@ public class Director {
 	public void setAsin(String asin) {
 		this.asin = asin;
 	}
-	
+
 }

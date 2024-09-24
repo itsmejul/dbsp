@@ -1,23 +1,27 @@
 package com.dbsp.entity;
 
+import com.dbsp.entity.keys.ListsId;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="lists")
+@Table(name = "lists")
+@IdClass(ListsId.class)
 public class Lists {
 
 	@Id
-	@Column(name="asin")
+	@Column(name = "asin")
 	private String asin;
 	@Id
-	@Column(name="listname")
+	@Column(name = "listname")
 	private String listname;
-	
+
 	public Lists() {
-		
+
 	}
 
 	public Lists(String asin, String listname) {
@@ -40,5 +44,5 @@ public class Lists {
 	public void setListname(String listname) {
 		this.listname = listname;
 	}
-	
+
 }

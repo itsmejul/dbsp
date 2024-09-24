@@ -1,23 +1,27 @@
 package com.dbsp.entity;
 
+import com.dbsp.entity.keys.LabelsId;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="labels")
+@Table(name = "labels")
+@IdClass(LabelsId.class)
 public class Labels {
 
 	@Id
-	@Column(name="label_name")
+	@Column(name = "label_name")
 	private String name;
 	@Id
-	@Column(name="asin")
+	@Column(name = "asin")
 	private String asin;
-	
+
 	public Labels() {
-		
+
 	}
 
 	public Labels(String name, String asin) {
@@ -40,5 +44,5 @@ public class Labels {
 	public void setAsin(String asin) {
 		this.asin = asin;
 	}
-	
+
 }

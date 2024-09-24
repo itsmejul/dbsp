@@ -1,23 +1,27 @@
 package com.dbsp.entity;
 
+import com.dbsp.entity.keys.SimProductsId;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="sim_products")
+@Table(name = "sim_products")
+@IdClass(SimProductsId.class)
 public class SimProducts {
 
 	@Id
-	@Column(name="asin_original")
+	@Column(name = "asin_original")
 	private String asin_original;
 	@Id
-	@Column(name="asin_similar")
+	@Column(name = "asin_similar")
 	private String asin_similar;
-	
+
 	public SimProducts() {
-		
+
 	}
 
 	public SimProducts(String asin_original, String asin_similar) {
@@ -41,5 +45,5 @@ public class SimProducts {
 	public void setAsin_similar(String asin_similar) {
 		this.asin_similar = asin_similar;
 	}
-	
+
 }

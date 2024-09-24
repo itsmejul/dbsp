@@ -1,23 +1,27 @@
 package com.dbsp.entity;
 
+import com.dbsp.entity.keys.ArtistId;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="artist")
+@Table(name = "artist")
+@IdClass(ArtistId.class)
 public class Artist {
 
 	@Id
-	@Column(name="artist_name")
+	@Column(name = "artist_name")
 	private String name;
 	@Id
-	@Column(name="asin")
+	@Column(name = "asin")
 	private String asin;
-	
+
 	public Artist() {
-		
+
 	}
 
 	public Artist(String name, String asin) {
@@ -40,5 +44,5 @@ public class Artist {
 	public void setAsin(String asin) {
 		this.asin = asin;
 	}
-	
+
 }

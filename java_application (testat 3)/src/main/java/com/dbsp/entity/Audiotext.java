@@ -1,29 +1,33 @@
 package com.dbsp.entity;
 
+import com.dbsp.entity.keys.AudiotextId;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="audiotext")
+@Table(name = "audiotext")
+@IdClass(AudiotextId.class)
 public class Audiotext {
 
 	@Id
-	@Column(name="asin")
+	@Column(name = "asin")
 	private String asin;
 	@Id
-	@Column(name="type")
+	@Column(name = "type")
 	private String type;
 	@Id
-	@Column(name="language")
+	@Column(name = "language")
 	private String language;
 	@Id
-	@Column(name="audioformat")
+	@Column(name = "audioformat")
 	private String audioformat;
-	
+
 	public Audiotext() {
-		
+
 	}
 
 	public Audiotext(String asin, String type, String language, String audioformat) {
@@ -64,5 +68,5 @@ public class Audiotext {
 	public void setAudioformat(String audioformat) {
 		this.audioformat = audioformat;
 	}
-	
+
 }
